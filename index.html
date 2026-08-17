@@ -328,24 +328,8 @@
             font-size: 16px;
             color: #4a3328;
         }
-        .menu-item .item-actions .btn-edit,
-        .menu-item .item-actions .btn-del {
-            font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 20px;
-            width: auto;
-            height: auto;
-        }
-        .menu-item .item-actions .btn-edit {
-            background: #e8d5c4;
-            color: #4a3328;
-        }
-        .menu-item .item-actions .btn-del {
-            background: #f0e4d8;
-            color: #a83226;
-        }
 
-        /* ===== 底部购物车 ===== */
+        /* ===== 底部购物车（可展开） ===== */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -369,6 +353,9 @@
             align-items: center;
             box-shadow: 0 8px 32px rgba(74, 51, 40, 0.25);
             pointer-events: auto;
+            cursor: pointer;
+            position: relative;
+            transition: border-radius 0.3s;
         }
         .cart-inner .info {
             display: flex;
@@ -376,6 +363,8 @@
             gap: 12px;
             color: #fdfaf7;
             font-size: 14px;
+            flex: 1;
+            min-width: 0;
         }
         .cart-inner .info .total {
             font-size: 20px;
@@ -387,10 +376,12 @@
             border-radius: 40px;
             font-size: 13px;
             font-weight: 500;
+            flex-shrink: 0;
         }
         .cart-inner .info .mode-label {
             font-size: 12px;
             opacity: 0.7;
+            flex-shrink: 0;
         }
         .cart-inner .checkout-btn {
             background: #c0392b;
@@ -402,10 +393,202 @@
             font-size: 15px;
             cursor: pointer;
             transition: 0.1s;
+            flex-shrink: 0;
+            margin-left: 8px;
         }
         .cart-inner .checkout-btn:active {
             transform: scale(0.94);
             background: #a83226;
+        }
+
+        /* ===== 购物车展开面板 ===== */
+        .cart-expand-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(74, 51, 40, 0.4);
+            z-index: 150;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 16px 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .cart-expand-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .cart-expand-overlay.show .cart-expand-panel {
+            transform: translateY(0);
+        }
+        .cart-expand-panel {
+            max-width: 420px;
+            width: 100%;
+            background: #fdfaf7;
+            border-radius: 28px 28px 24px 24px;
+            padding: 20px 20px 24px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -8px 40px rgba(74, 51, 40, 0.15);
+        }
+        .cart-expand-panel .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: #d5c4b8;
+            border-radius: 4px;
+            margin: 0 auto 14px;
+            flex-shrink: 0;
+        }
+        .cart-expand-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+        .cart-expand-panel .panel-header .title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4a3328;
+        }
+        .cart-expand-panel .panel-header .close-btn {
+            background: #f5efe8;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #8a7a6a;
+            cursor: pointer;
+        }
+        .cart-expand-panel .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .cart-expand-panel .panel-body::-webkit-scrollbar {
+            width: 3px;
+        }
+        .cart-expand-panel .panel-body::-webkit-scrollbar-thumb {
+            background: #d5c4b8;
+            border-radius: 4px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0e4d8;
+        }
+        .cart-item-row .item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-row .item-left .name {
+            font-weight: 500;
+            color: #4a3328;
+            font-size: 15px;
+        }
+        .cart-item-row .item-left .spec {
+            font-size: 13px;
+            color: #a08474;
+        }
+        .cart-item-row .item-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .cart-item-row .item-right .subtotal {
+            font-weight: 600;
+            color: #c0392b;
+            font-size: 15px;
+        }
+        .cart-item-row .item-right .del-btn {
+            background: #f0e4d8;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #a83226;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .cart-item-row .item-right .del-btn:active {
+            background: #e8d5c4;
+        }
+
+        .cart-expand-panel .panel-footer {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #f0e4d8;
+            flex-shrink: 0;
+        }
+        .cart-expand-panel .panel-footer .summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .cart-expand-panel .panel-footer .summary .label {
+            color: #8a7a6a;
+            font-size: 14px;
+        }
+        .cart-expand-panel .panel-footer .summary .amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4a3328;
+        }
+        .cart-expand-panel .panel-footer .summary .amount .fee {
+            font-size: 14px;
+            font-weight: 400;
+            color: #a08474;
+        }
+        .cart-expand-panel .panel-footer .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .cart-expand-panel .panel-footer .actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .cart-expand-panel .panel-footer .actions button:active {
+            transform: scale(0.96);
+        }
+        .cart-expand-panel .panel-footer .actions .clear-btn {
+            background: #f5efe8;
+            color: #8a7a6a;
+        }
+        .cart-expand-panel .panel-footer .actions .checkout-btn2 {
+            background: #c0392b;
+            color: white;
+        }
+        .cart-expand-panel .panel-footer .actions .checkout-btn2:active {
+            background: #a83226;
+        }
+        .cart-empty-state {
+            text-align: center;
+            padding: 30px 0;
+            color: #b8a090;
+        }
+        .cart-empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
         }
 
         /* ===== 规格弹窗 ===== */
@@ -676,7 +859,6 @@
             color: #a83226;
         }
 
-        /* ===== 空状态 ===== */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -686,35 +868,8 @@
             font-size: 48px;
             margin-bottom: 12px;
         }
-
-        /* ===== 工具类 ===== */
         .hidden {
             display: none !important;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         @media (max-width: 420px) {
@@ -727,6 +882,9 @@
             .menu-item .food-img {
                 width: 56px;
                 height: 56px;
+            }
+            .cart-expand-panel {
+                padding: 16px 16px 20px;
             }
         }
     </style>
@@ -765,7 +923,6 @@
             <div style="font-size:12px;color:#b8a090;margin-top:12px;">
                 🔒 安全 · 便捷 · 扫码点单
             </div>
-            <!-- 店铺照片背景装饰 -->
             <div style="margin-top:20px;border-radius:20px;overflow:hidden;height:100px;background:linear-gradient(135deg,#e8d5c4,#dcc6b2);display:flex;align-items:center;justify-content:center;color:#8a7a6a;font-size:14px;font-weight:500;">
                 🏠 店铺照片
             </div>
@@ -832,9 +989,33 @@
             </div>
         </div>
 
+        <!-- ===== 购物车展开遮罩 ===== -->
+        <div class="cart-expand-overlay" id="cartExpandOverlay">
+            <div class="cart-expand-panel" id="cartExpandPanel">
+                <div class="drag-handle"></div>
+                <div class="panel-header">
+                    <span class="title">🛒 购物车</span>
+                    <button class="close-btn" id="cartCloseBtn">收起</button>
+                </div>
+                <div class="panel-body" id="cartExpandBody">
+                    <!-- 由 JavaScript 渲染 -->
+                </div>
+                <div class="panel-footer">
+                    <div class="summary">
+                        <span class="label">总计</span>
+                        <span class="amount" id="expandTotal">¥0 <span class="fee" id="expandFee"></span></span>
+                    </div>
+                    <div class="actions">
+                        <button class="clear-btn" id="clearCartBtn">🗑️ 清空</button>
+                        <button class="checkout-btn2" id="expandCheckoutBtn">去结算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== 底部购物车 ===== -->
         <div class="cart-bar" id="cartBar">
-            <div class="cart-inner">
+            <div class="cart-inner" id="cartInner">
                 <div class="info">
                     <span class="mode-label" id="cartModeLabel">🏠 堂食</span>
                     <span class="total" id="cartTotal">¥0</span>
@@ -844,7 +1025,7 @@
             </div>
         </div>
 
-        <!-- ===== 规格选择弹窗 ===== -->
+        <!-- ===== 规格弹窗 ===== -->
         <div class="modal-overlay" id="specModal">
             <div class="modal-box">
                 <div class="modal-title" id="modalTitle">选择规格</div>
@@ -861,7 +1042,7 @@
 
     <script>
         // ============================================================
-        // 1. 数据管理 (localStorage)
+        // 1. 数据管理
         // ============================================================
         const STORAGE_KEY = 'laozhang_menu_data_v2';
 
@@ -905,14 +1086,14 @@
         // ============================================================
         // 2. 状态
         // ============================================================
-        let currentMode = 'dinein'; // 'dinein' | 'pack'
+        let currentMode = 'dinein';
         let tableNumber = '06';
-        let cart = []; // { id, specIndex, label, price, qty, name }
+        let cart = [];
         let currentCategory = '全部';
         let editingId = null;
 
         // ============================================================
-        // 3. DOM 引用
+        // 3. DOM
         // ============================================================
         const homePage = document.getElementById('homePage');
         const orderPage = document.getElementById('orderPage');
@@ -934,12 +1115,19 @@
         const modalCancel = document.getElementById('modalCancel');
         const modalConfirm = document.getElementById('modalConfirm');
 
+        // 购物车展开
+        const cartExpandOverlay = document.getElementById('cartExpandOverlay');
+        const cartExpandPanel = document.getElementById('cartExpandPanel');
+        const cartExpandBody = document.getElementById('cartExpandBody');
+        const expandTotal = document.getElementById('expandTotal');
+        const expandFee = document.getElementById('expandFee');
+
         let selectedSpecItem = null;
         let selectedSpecIndex = 0;
         let toastTimer = null;
 
         // ============================================================
-        // 4. 工具函数
+        // 4. 工具
         // ============================================================
         function showToast(msg) {
             toastEl.textContent = msg;
@@ -962,16 +1150,13 @@
             let total = 0;
             cart.forEach(c => { total += c.price * c.qty; });
             if (currentMode === 'pack') {
-                total += getTotalItems(); // 每份+1元打包费
+                total += getTotalItems();
             }
             return total;
         }
 
         function getPackingFee() {
-            if (currentMode === 'pack') {
-                return getTotalItems();
-            }
-            return 0;
+            return currentMode === 'pack' ? getTotalItems() : 0;
         }
 
         function getModeLabel() {
@@ -979,10 +1164,7 @@
         }
 
         function getModeDisplay() {
-            if (currentMode === 'dinein') {
-                return tableNumber + '号桌';
-            }
-            return '打包带走';
+            return currentMode === 'dinein' ? tableNumber + '号桌' : '打包带走';
         }
 
         // ============================================================
@@ -994,7 +1176,8 @@
                 filtered = menuData.filter(item => item.category === currentCategory);
             }
             if (filtered.length === 0) {
-                menuList.innerHTML = `<div class="empty-state"><div class="icon">🍽️</div>暂无菜品<br><span style="font-size:13px;">点「管理菜单」添加</span></div>`;
+                menuList.innerHTML =
+                `<div class="empty-state"><div class="icon">🍽️</div>暂无菜品<br><span style="font-size:13px;">点「管理菜单」添加</span></div>`;
                 return;
             }
             let html = '';
@@ -1041,37 +1224,115 @@
             modeTableDisplay.textContent = getModeDisplay();
             tableBadge.textContent = `📍 ${getModeDisplay()}`;
             homeTableNum.textContent = tableNumber;
-            // 切换按钮文字
             switchModeBtn.textContent = currentMode === 'dinein' ? '切换到打包' : '切换到堂食';
+            // 更新展开面板
+            renderExpandCart();
         }
 
-        function renderAdminList() {
-            const container = document.getElementById('adminItemList');
-            if (menuData.length === 0) {
-                container.innerHTML = '<div class="empty-state">暂无菜品</div>';
+        // ============================================================
+        // 6. 购物车展开面板
+        // ============================================================
+        function renderExpandCart() {
+            if (cart.length === 0) {
+                cartExpandBody.innerHTML = `
+                    <div class="cart-empty-state">
+                        <div class="icon">🛒</div>
+                        <div>购物车是空的</div>
+                        <div style="font-size:13px;color:#b8a090;margin-top:4px;">快去点单吧！</div>
+                    </div>
+                `;
+                expandTotal.textContent = '¥0';
+                expandFee.textContent = '';
                 return;
             }
             let html = '';
-            menuData.forEach(item => {
+            cart.forEach(c => {
+                const subtotal = c.price * c.qty;
                 html += `
-                    <div class="admin-list-item">
-                        <div class="info">
-                            <span class="name">${item.name}</span>
-                            <span style="color:#a08474;font-size:13px;">${item.category}</span>
-                            <span class="price">¥${item.price}</span>
+                    <div class="cart-item-row" data-key="${c.key}">
+                        <div class="item-left">
+                            <span class="name">${c.name}</span>
+                            <span class="spec">${c.label || '默认'} × ${c.qty}</span>
                         </div>
-                        <div class="actions">
-                            <button class="edit" data-action="edit" data-id="${item.id}">编辑</button>
-                            <button class="del" data-action="del" data-id="${item.id}">删除</button>
+                        <div class="item-right">
+                            <span class="subtotal">¥${subtotal}</span>
+                            <button class="del-btn" data-key="${c.key}">删除</button>
                         </div>
                     </div>
                 `;
             });
-            container.innerHTML = html;
+            cartExpandBody.innerHTML = html;
+
+            const total = getTotalPrice();
+            const fee = getPackingFee();
+            expandTotal.textContent = '¥' + total.toFixed(0);
+            expandFee.textContent = fee > 0 ? `(含打包费 ¥${fee})` : '';
+
+            // 绑定删除事件
+            cartExpandBody.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const key = this.dataset.key;
+                    cart = cart.filter(c => c.key !== key);
+                    renderMenu();
+                    if (cart.length === 0) {
+                        closeExpandCart();
+                    }
+                    showToast('已移除');
+                });
+            });
         }
 
+        function openExpandCart() {
+            if (cart.length === 0) {
+                showToast('🛒 购物车是空的');
+                return;
+            }
+            renderExpandCart();
+            cartExpandOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeExpandCart() {
+            cartExpandOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // 点击遮罩关闭
+        cartExpandOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeExpandCart();
+        });
+
+        document.getElementById('cartCloseBtn').addEventListener('click', closeExpandCart);
+
+        // 点击购物车区域展开
+        document.getElementById('cartInner').addEventListener('click', function(e) {
+            if (e.target.closest('.checkout-btn')) return;
+            openExpandCart();
+        });
+
+        // 清空购物车
+        document.getElementById('clearCartBtn').addEventListener('click', function() {
+            if (cart.length === 0) return;
+            if (!confirm('确定清空购物车吗？')) return;
+            cart = [];
+            renderMenu();
+            closeExpandCart();
+            showToast('已清空购物车');
+        });
+
+        // 展开面板内的结算
+        document.getElementById('expandCheckoutBtn').addEventListener('click', function() {
+            if (cart.length === 0) {
+                showToast('🛒 购物车是空的');
+                return;
+            }
+            closeExpandCart();
+            handleCheckout();
+        });
+
         // ============================================================
-        // 6. 购物车操作
+        // 7. 购物车操作
         // ============================================================
         function addToCart(item, specIndex) {
             const hasSpecs = item.specs && item.specs.length > 0;
@@ -1083,14 +1344,7 @@
             if (existing) {
                 existing.qty += 1;
             } else {
-                cart.push({
-                    key: key,
-                    id: item.id,
-                    name: item.name,
-                    label: label,
-                    price: price,
-                    qty: 1
-                });
+                cart.push({ key, id: item.id, name: item.name, label, price, qty: 1 });
             }
             renderMenu();
             showToast(`+1 · ${item.name}${label ? ' ('+label+')' : ''}`);
@@ -1110,15 +1364,36 @@
             showToast(`-1 · ${item ? item.name : ''}`);
         }
 
-        function clearCart() {
-            if (cart.length > 0) {
-                cart = [];
-                renderMenu();
+        function handleCheckout() {
+            if (cart.length === 0) {
+                showToast('🛒 购物车是空的');
+                return;
             }
+            const total = getTotalPrice();
+            const fee = getPackingFee();
+            let detail = cart.map(c => `${c.name}${c.label ? '('+c.label+')' : ''} x${c.qty}`).join('、');
+            if (detail.length > 30) detail = detail.slice(0, 28) + '…';
+            const modeText = currentMode === 'dinein' ? `堂食 · ${tableNumber}号桌` : '打包带走';
+            showToast(`✅ 订单已提交！${modeText}\n${detail}\n总计 ¥${total}${fee > 0 ? ' (含打包费¥'+fee+')' : ''}`);
         }
 
         // ============================================================
-        // 7. 规格弹窗
+        // 8. 模式切换
+        // ============================================================
+        function switchMode(newMode) {
+            if (newMode === currentMode) return;
+            if (cart.length > 0) {
+                if (!confirm(`切换后将保留当前购物车，价格会重新计算。确定切换到「${newMode === 'dinein' ? '堂食' : '打包'}」吗？`)) {
+                    return;
+                }
+            }
+            currentMode = newMode;
+            renderMenu();
+            showToast(`已切换到${currentMode === 'dinein' ? '🏠 堂食' : '📦 打包'}`);
+        }
+
+        // ============================================================
+        // 9. 规格弹窗
         // ============================================================
         function openSpecModal(item) {
             selectedSpecItem = item;
@@ -1136,7 +1411,6 @@
                 `;
             });
             modalOptions.innerHTML = html;
-            // 点击选项
             modalOptions.querySelectorAll('.modal-option').forEach(el => {
                 el.addEventListener('click', function() {
                     modalOptions.querySelectorAll('.modal-option').forEach(o => o.classList.remove('active'));
@@ -1159,22 +1433,7 @@
         }
 
         // ============================================================
-        // 8. 模式切换
-        // ============================================================
-        function switchMode(newMode) {
-            if (newMode === currentMode) return;
-            if (cart.length > 0) {
-                if (!confirm(`切换后将保留当前购物车，但价格会重新计算。确定切换到「${newMode === 'dinein' ? '堂食' : '打包'}」吗？`)) {
-                    return;
-                }
-            }
-            currentMode = newMode;
-            renderMenu();
-            showToast(`已切换到${currentMode === 'dinein' ? '🏠 堂食' : '📦 打包'}`);
-        }
-
-        // ============================================================
-        // 9. 后台管理
+        // 10. 后台管理（保留原有逻辑，略作精简）
         // ============================================================
         let tempSpecs = [];
 
@@ -1184,14 +1443,13 @@
             tempSpecs.forEach((spec, idx) => {
                 html += `
                     <div class="spec-row">
-                        <input type="text" placeholder="规格名（如：小份）" value="${spec.label}" data-spec-label="${idx}">
+                        <input type="text" placeholder="规格名" value="${spec.label}" data-spec-label="${idx}">
                         <input type="number" placeholder="价格" value="${spec.price}" data-spec-price="${idx}" style="max-width:80px;">
                         <button data-spec-del="${idx}">✕</button>
                     </div>
                 `;
             });
             container.innerHTML = html;
-            // 绑定事件
             container.querySelectorAll('[data-spec-label]').forEach(el => {
                 el.addEventListener('input', function() {
                     tempSpecs[parseInt(this.dataset.specLabel)].label = this.value;
@@ -1263,7 +1521,6 @@
             saveMenu(menuData);
             renderAdminList();
             renderMenu();
-            // 清空表单
             document.getElementById('editId').value = '';
             document.getElementById('inputName').value = '';
             document.getElementById('inputDesc').value = '';
@@ -1284,8 +1541,33 @@
             showToast('已删除');
         }
 
+        function renderAdminList() {
+            const container = document.getElementById('adminItemList');
+            if (menuData.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无菜品</div>';
+                return;
+            }
+            let html = '';
+            menuData.forEach(item => {
+                html += `
+                    <div class="admin-list-item">
+                        <div class="info">
+                            <span class="name">${item.name}</span>
+                            <span style="color:#a08474;font-size:13px;">${item.category}</span>
+                            <span class="price">¥${item.price}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="edit" data-action="edit" data-id="${item.id}">编辑</button>
+                            <button class="del" data-action="del" data-id="${item.id}">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
         // ============================================================
-        // 10. 页面切换
+        // 11. 页面切换
         // ============================================================
         function showHome() {
             homePage.style.display = 'block';
@@ -1309,10 +1591,10 @@
         }
 
         // ============================================================
-        // 11. 事件绑定
+        // 12. 事件绑定
         // ============================================================
 
-        // -- 首页按钮 --
+        // -- 首页 --
         document.getElementById('btnDineIn').addEventListener('click', function() {
             currentMode = 'dinein';
             showOrder();
@@ -1326,11 +1608,10 @@
 
         // -- 切换模式 --
         switchModeBtn.addEventListener('click', function() {
-            const newMode = currentMode === 'dinein' ? 'pack' : 'dinein';
-            switchMode(newMode);
+            switchMode(currentMode === 'dinein' ? 'pack' : 'dinein');
         });
 
-        // -- 分类切换 --
+        // -- 分类 --
         document.getElementById('categoryTabs').addEventListener('click', function(e) {
             const tab = e.target.closest('.category-tab');
             if (!tab) return;
@@ -1340,7 +1621,7 @@
             renderMenu();
         });
 
-        // -- 菜单列表事件 (点单) --
+        // -- 菜单列表 --
         document.getElementById('menuList').addEventListener('click', function(e) {
             const btn = e.target.closest('button');
             if (!btn) return;
@@ -1348,7 +1629,6 @@
             const id = parseInt(btn.dataset.id);
             const item = menuData.find(d => d.id === id);
             if (!item) return;
-
             if (action === 'incr') {
                 if (item.specs && item.specs.length > 0) {
                     openSpecModal(item);
@@ -1367,32 +1647,16 @@
             if (e.target === this) closeModal();
         });
 
-        // -- 结算 --
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
-            if (cart.length === 0) {
-                showToast('🛒 购物车是空的');
-                return;
-            }
-            const total = getTotalPrice();
-            const fee = getPackingFee();
-            let detail = cart.map(c => {
-                return `${c.name}${c.label ? '('+c.label+')' : ''} x${c.qty}`;
-            }).join('、');
-            if (detail.length > 30) detail = detail.slice(0, 28) + '…';
-            const modeText = currentMode === 'dinein' ? `堂食 · ${tableNumber}号桌` : '打包带走';
-            showToast(`✅ 订单已提交！${modeText}\n${detail}\n总计 ¥${total}${fee > 0 ? ' (含打包费¥'+fee+')' : ''}`);
-        });
+        // -- 结算（底部按钮） --
+        document.getElementById('checkoutBtn').addEventListener('click', handleCheckout);
 
-        // -- 后台入口 --
+        // -- 后台 --
         document.getElementById('adminEntryBtn').addEventListener('click', showAdmin);
         document.getElementById('adminBackBtn').addEventListener('click', showOrder);
-
-        // -- 后台管理事件 --
         document.getElementById('addSpecBtn').addEventListener('click', function() {
             tempSpecs.push({ label: '新规格', price: 0 });
             renderSpecs();
         });
-
         document.getElementById('saveBtn').addEventListener('click', saveAdminForm);
         document.getElementById('cancelBtn').addEventListener('click', function() {
             document.getElementById('editId').value = '';
@@ -1406,7 +1670,6 @@
             document.getElementById('adminFormTitle').textContent = '➕ 添加菜品';
             showToast('已取消');
         });
-
         document.getElementById('adminItemList').addEventListener('click', function(e) {
             const btn = e.target.closest('button');
             if (!btn) return;
@@ -1421,25 +1684,19 @@
         });
 
         // ============================================================
-        // 12. 初始化
+        // 13. 初始化
         // ============================================================
-        // 从URL获取桌号
         const urlParams = new URLSearchParams(window.location.search);
         const tableParam = urlParams.get('table');
-        if (tableParam) {
-            tableNumber = tableParam;
-        }
+        if (tableParam) tableNumber = tableParam;
         homeTableNum.textContent = tableNumber;
 
-        // 显示首页
         showHome();
         showToast('👋 欢迎光临！请选择用餐方式');
 
-        console.log('🥟 老张家水饺 · 温暖家常风');
+        console.log('🥟 老张家水饺 · 温暖家常风 (带购物车展开)');
         console.log('📋 菜单数据:', menuData);
         console.log('🔑 桌号:', tableNumber);
-        console.log('💡 提示: 在URL后加 ?table=06 可切换桌号');
     </script>
-
 </body>
 </html>
