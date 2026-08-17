@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>美味餐厅 · 扫码点单</title>
+  <title>家常小炒 · 扫码点单</title>
   <style>
     * {
       margin: 0;
@@ -46,7 +46,7 @@
       gap: 6px;
     }
     .header h1 span {
-      background: #ff6b35;
+      background: #e85d3a;
       color: white;
       font-size: 12px;
       font-weight: 500;
@@ -64,7 +64,7 @@
     }
     .table-badge i {
       font-style: normal;
-      background: #ff6b35;
+      background: #e85d3a;
       color: white;
       padding: 0 8px;
       border-radius: 30px;
@@ -91,24 +91,25 @@
       font-weight: 500;
       color: #4a4a5a;
       cursor: default;
+      flex-shrink: 0;
     }
     .category-tab.active {
       background: #1e1e2a;
       color: white;
     }
     .category-tab.highlight {
-      background: #ff6b35;
+      background: #e85d3a;
       color: white;
     }
     .menu-list {
       padding: 12px 16px 20px 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .menu-item {
       background: white;
-      border-radius: 20px;
+      border-radius: 16px;
       padding: 14px 14px 14px 16px;
       display: flex;
       align-items: center;
@@ -118,40 +119,42 @@
     .item-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       flex: 1;
+      min-width: 0;
     }
     .item-name {
       font-weight: 600;
-      font-size: 17px;
+      font-size: 16px;
       color: #1e1e2a;
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-wrap: wrap;
     }
     .item-name .badge {
-      font-size: 11px;
-      background: #ff6b35;
+      font-size: 10px;
+      background: #e85d3a;
       color: white;
       border-radius: 30px;
       padding: 0 8px;
       line-height: 18px;
       font-weight: 500;
+      flex-shrink: 0;
     }
     .item-desc {
-      font-size: 13px;
-      color: #6e6e80;
-      margin-top: 2px;
+      font-size: 12px;
+      color: #8e8e9e;
     }
     .item-price {
       font-weight: 600;
-      color: #1e1e2a;
-      font-size: 18px;
-      margin-top: 4px;
+      color: #e85d3a;
+      font-size: 17px;
+      margin-top: 2px;
     }
     .item-price small {
       font-weight: 400;
-      font-size: 13px;
+      font-size: 12px;
       color: #8e8e9e;
       margin-left: 2px;
     }
@@ -159,16 +162,16 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-left: 12px;
+      margin-left: 10px;
       flex-shrink: 0;
     }
     .qty-btn {
       background: #f2f2f5;
       border: none;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 40px;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 300;
       color: #1e1e2a;
       display: flex;
@@ -177,15 +180,18 @@
       cursor: pointer;
     }
     .qty-btn.add {
-      background: #ff6b35;
+      background: #e85d3a;
       color: white;
       font-weight: 500;
     }
+    .qty-btn.add:active {
+      background: #cc4f2e;
+    }
     .qty-number {
-      min-width: 28px;
+      min-width: 24px;
       text-align: center;
       font-weight: 500;
-      font-size: 17px;
+      font-size: 16px;
       color: #1e1e2a;
     }
     .cart-bar {
@@ -197,7 +203,7 @@
       justify-content: center;
       padding: 12px 16px 20px 16px;
       pointer-events: none;
-      background: linear-gradient(to top, rgba(255,255,255,0.9) 60%, transparent);
+      background: linear-gradient(to top, rgba(255,255,255,0.92) 60%, transparent);
     }
     .cart-inner {
       max-width: 420px;
@@ -222,22 +228,26 @@
       font-size: 20px;
     }
     .cart-count {
-      background: #ff6b35;
+      background: #e85d3a;
       padding: 2px 12px;
       border-radius: 40px;
       font-size: 14px;
       font-weight: 500;
     }
     .cart-checkout {
-      background: #ff6b35;
+      background: #e85d3a;
       border: none;
       color: white;
       font-weight: 600;
-      font-size: 16px;
-      padding: 8px 24px;
+      font-size: 15px;
+      padding: 8px 22px;
       border-radius: 60px;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+      box-shadow: 0 2px 8px rgba(232, 93, 58, 0.35);
+    }
+    .cart-checkout:active {
+      transform: scale(0.94);
+      background: #cc4f2e;
     }
     .mock-table-info {
       padding: 6px 20px 8px 20px;
@@ -272,16 +282,24 @@
     .toast.show {
       opacity: 1;
     }
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e1e2a;
+      padding: 8px 4px 4px 4px;
+      border-bottom: 2px solid #e85d3a;
+      margin-top: 4px;
+    }
     @media (max-width: 480px) {
       .app-container {
         border-radius: 24px;
       }
       .cart-inner {
-        padding: 10px 16px 10px 20px;
+        padding: 10px 16px 10px 18px;
       }
       .cart-checkout {
-        padding: 6px 18px;
-        font-size: 15px;
+        padding: 6px 16px;
+        font-size: 14px;
       }
     }
   </style>
@@ -291,7 +309,7 @@
 
   <div class="app-container">
     <div class="header">
-      <h1>🍽️ 味享<span>扫码</span></h1>
+      <h1>🍜 家常小炒<span>扫码</span></h1>
       <div class="table-badge">🪑 <i>A06</i></div>
     </div>
 
@@ -301,12 +319,12 @@
     </div>
 
     <div class="category-tabs">
-      <span class="category-tab active">🔥 招牌</span>
-      <span class="category-tab">🍜 主食</span>
-      <span class="category-tab highlight">🥩 烤肉</span>
-      <span class="category-tab">🥗 沙拉</span>
-      <span class="category-tab">🍹 饮品</span>
-      <span class="category-tab">🍰 甜品</span>
+      <span class="category-tab active">🍳 炒饭</span>
+      <span class="category-tab highlight">🍝 炒面</span>
+      <span class="category-tab">🥟 水饺</span>
+      <span class="category-tab">🍜 汤面</span>
+      <span class="category-tab">🥗 小菜</span>
+      <span class="category-tab">🍲 馄饨</span>
     </div>
 
     <div class="menu-list" id="menuList"></div>
@@ -324,14 +342,54 @@
 
   <script>
     const menuData = [
-      { id: 1, name: '厚切牛舌', desc: '盐烤 · 配柠檬', price: 68, badge: '招牌' },
-      { id: 2, name: '和牛肋条', desc: 'M9+ 雪花', price: 128, badge: '人气' },
-      { id: 3, name: '石锅拌饭', desc: '韩式辣酱 + 流心蛋', price: 42, badge: '' },
-      { id: 4, name: '泡菜豆腐汤', desc: '暖胃微辣', price: 36, badge: '' },
-      { id: 5, name: '柚子气泡水', desc: '清爽解腻', price: 22, badge: '' },
-      { id: 6, name: '抹茶提拉米苏', desc: '每日限定', price: 38, badge: '限定' },
-      { id: 7, name: '烤鸡翅', desc: '蜂蜜芥末酱', price: 48, badge: '' },
-      { id: 8, name: '生菜包肉', desc: '赠送蘸酱', price: 32, badge: '' }
+      // ===== 炒饭类 =====
+      { id: 1, name: '鸡蛋肉丝炒饭', desc: '香喷喷的家常味', price: 12, badge: '招牌' },
+      { id: 2, name: '鸡蛋火腿炒饭', desc: '火腿丁+鸡蛋', price: 10, badge: '' },
+      { id: 3, name: '老干妈炒饭', desc: '微辣 · 老干妈风味', price: 10, badge: '' },
+      { id: 4, name: '鸡蛋炒饭', desc: '经典原味', price: 8, badge: '' },
+
+      // ===== 炒面炒河粉类 =====
+      { id: 5, name: '鸡蛋肉丝炒面', desc: '劲道面条+肉丝', price: 12, badge: '人气' },
+      { id: 6, name: '鸡蛋火腿炒面', desc: '火腿+鸡蛋', price: 10, badge: '' },
+      { id: 7, name: '鸡蛋炒面', desc: '经典炒面', price: 8, badge: '' },
+      { id: 8, name: '鸡蛋肉丝炒河粉', desc: '爽滑河粉+肉丝', price: 12, badge: '' },
+      { id: 9, name: '鸡蛋火腿炒河粉', desc: '河粉+火腿+鸡蛋', price: 10, badge: '' },
+      { id: 10, name: '鸡蛋炒河粉', desc: '经典炒河粉', price: 8, badge: '' },
+
+      // ===== 水饺类 =====
+      { id: 11, name: '韭菜鸡蛋水饺', desc: '16只/12元 · 24只/15元 · 30只/15元', price: 12, badge: '' },
+      { id: 12, name: '芹菜猪肉水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 13, name: '韭菜猪肉水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 14, name: '白菜猪肉水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 15, name: '大葱猪肉水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 16, name: '鲜肉水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 17, name: '什锦水饺', desc: '15只/10元 · 23只/15元 · 30只/20元', price: 10, badge: '' },
+      { id: 18, name: '香菇猪肉水饺', desc: '15只/12元 · 20只/16元 · 25只/20元', price: 12, badge: '' },
+      { id: 19, name: '荠菜猪肉水饺', desc: '15只/12元 · 20只/16元 · 25只/20元', price: 12, badge: '' },
+
+      // ===== 汤面类 =====
+      { id: 20, name: '青椒肉丝面', desc: '青椒+肉丝', price: 10, badge: '' },
+      { id: 21, name: '雪菜肉丝面', desc: '雪菜+肉丝', price: 10, badge: '' },
+      { id: 22, name: '番茄鸡蛋面', desc: '番茄+鸡蛋', price: 10, badge: '' },
+      { id: 23, name: '葱油拌面', desc: '葱香四溢', price: 8, badge: '' },
+      { id: 24, name: '鸡蛋面', desc: '清汤鸡蛋面', price: 7, badge: '' },
+
+      // ===== 小菜/凉菜类 =====
+      { id: 25, name: '花生米', desc: '酥脆下酒', price: 5, badge: '' },
+      { id: 26, name: '凉拌黄瓜', desc: '清爽开胃', price: 10, badge: '' },
+      { id: 27, name: '蒜香皮蛋', desc: '皮蛋+蒜蓉', price: 15, badge: '' },
+      { id: 28, name: '皮蛋豆腐', desc: '嫩豆腐+皮蛋', price: 10, badge: '' },
+      { id: 29, name: '荷包蛋', desc: '煎蛋', price: 2, badge: '' },
+
+      // ===== 馄饨类 =====
+      { id: 30, name: '大馄饨', desc: '12只/12元 · 15只/15元 · 20只/20元', price: 12, badge: '' },
+      { id: 31, name: '小馄饨', desc: '小碗/5元 · 中碗/8元 · 大碗/10元', price: 5, badge: '' },
+
+      // ===== 其他 =====
+      { id: 32, name: '鸡腿饭+素菜', desc: '整只鸡腿+时蔬', price: 12, badge: '推荐' },
+      { id: 33, name: '凉皮', desc: '小份/7元 · 大份/10元', price: 7, badge: '' },
+      { id: 34, name: '凉面', desc: '小份/7元 · 大份/10元', price: 7, badge: '' },
+      { id: 35, name: '冲鸡蛋汤', desc: '暖心暖胃', price: 2, badge: '' }
     ];
 
     let cart = {};
@@ -358,7 +416,7 @@
             <div class="item-info">
               <div class="item-name">${item.name} ${badgeHtml}</div>
               <div class="item-desc">${item.desc}</div>
-              <div class="item-price">¥${item.price} <small>元</small></div>
+              <div class="item-price">¥${item.price} <small>起</small></div>
             </div>
             <div class="item-actions">
               ${qty > 0 ? `<button class="qty-btn" data-action="decr" data-id="${item.id}">−</button>` : ''}
