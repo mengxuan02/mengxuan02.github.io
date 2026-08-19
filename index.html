@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>老张家水饺 · 温暖家常</title>
+    <title>老张家水饺 · 扫码点单</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         body {
             background: #f5efe8;
@@ -36,7 +36,6 @@
             padding: 24px 20px 16px 20px;
             border-bottom: 1px solid #f0e4d8;
             text-align: center;
-            cursor: default;
         }
         .header h1 {
             font-size: 26px;
@@ -45,14 +44,9 @@
             letter-spacing: 2px;
             cursor: pointer;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
             padding: 4px 8px;
             border-radius: 12px;
-            transition: background 0.15s;
             display: inline-block;
-        }
-        .header h1:active {
-            background: rgba(200, 57, 43, 0.08);
         }
         .header h1 span {
             color: #c0392b;
@@ -234,10 +228,6 @@
             gap: 14px;
             align-items: center;
             box-shadow: 0 2px 8px rgba(180, 120, 80, 0.04);
-            transition: 0.1s;
-        }
-        .menu-item:active {
-            background: #fdf8f2;
         }
         .menu-item .food-img {
             width: 70px;
@@ -251,7 +241,6 @@
             justify-content: center;
             font-size: 30px;
             color: #b8a090;
-            object-fit: cover;
         }
         .menu-item .food-img img {
             width: 100%;
@@ -358,10 +347,8 @@
             box-shadow: 0 8px 32px rgba(74, 51, 40, 0.25);
             pointer-events: auto;
             cursor: pointer;
-            position: relative;
             transition: transform 0.15s;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
         .cart-inner:active {
             transform: scale(0.98);
@@ -453,7 +440,6 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 -8px 40px rgba(74, 51, 40, 0.15);
-            position: relative;
             z-index: 1000;
         }
         .cart-expand-panel .drag-handle {
@@ -542,9 +528,6 @@
             cursor: pointer;
             font-weight: 500;
         }
-        .cart-item-row .item-right .del-btn:active {
-            background: #e8d5c4;
-        }
 
         .cart-expand-panel .panel-footer {
             margin-top: 14px;
@@ -596,9 +579,6 @@
         .cart-expand-panel .panel-footer .actions .checkout-btn2 {
             background: #c0392b;
             color: white;
-        }
-        .cart-expand-panel .panel-footer .actions .checkout-btn2:active {
-            background: #a83226;
         }
         .cart-empty-state {
             text-align: center;
@@ -782,10 +762,6 @@
             margin-bottom: 12px;
             color: #4a3328;
         }
-        .admin-form textarea {
-            resize: vertical;
-            min-height: 50px;
-        }
         .admin-form .spec-row {
             display: flex;
             gap: 8px;
@@ -826,10 +802,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-        }
-        .admin-form .btn-save:active {
-            background: #a83226;
-            transform: scale(0.97);
         }
         .admin-form .btn-cancel {
             width: 100%;
@@ -887,16 +859,40 @@
             font-size: 48px;
             margin-bottom: 12px;
         }
-        .hidden {
-            display: none !important;
-        }
 
-        /* ===== 管理菜单入口（默认隐藏） ===== */
         #adminEntryBtn {
             display: none !important;
         }
         #adminEntryBtn.visible {
             display: inline-block !important;
+        }
+
+        .submit-area {
+            padding: 8px 16px 12px;
+            display: flex;
+            gap: 10px;
+        }
+        .submit-area .btn-submit {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 16px;
+            background: #27ae60;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 16px rgba(39, 174, 96, 0.25);
+        }
+        .submit-area .btn-submit:active {
+            transform: scale(0.96);
+            background: #1e8449;
+        }
+        .submit-area .btn-submit:disabled {
+            background: #888;
+            box-shadow: none;
+            cursor: not-allowed;
         }
 
         @media (max-width: 420px) {
@@ -934,7 +930,7 @@
         <div id="homePage">
             <div class="welcome">👋 欢迎光临</div>
             <div class="welcome-sub">请选择您的用餐方式</div>
-            <div class="table-show" id="homeTableShow">📍 当前桌号：<span id="homeTableNum">06</span></div>
+            <div class="table-show">📍 当前桌号：<span id="homeTableNum">06</span></div>
             <div class="home-btn-group">
                 <button class="home-btn dine-in" id="btnDineIn">
                     <span class="icon">🏠</span>
@@ -947,9 +943,7 @@
                     <span class="desc">打包带走</span>
                 </button>
             </div>
-            <div style="font-size:12px;color:#b8a090;margin-top:12px;">
-                🔒 安全 · 便捷 · 扫码点单
-            </div>
+            <div style="font-size:12px;color:#b8a090;margin-top:12px;">🔒 安全 · 便捷 · 扫码点单</div>
             <div style="margin-top:20px;border-radius:20px;overflow:hidden;height:100px;background:linear-gradient(135deg,#e8d5c4,#dcc6b2);display:flex;align-items:center;justify-content:center;color:#8a7a6a;font-size:14px;font-weight:500;">
                 🏠 店铺照片
             </div>
@@ -970,7 +964,10 @@
                 <button class="category-tab" data-cat="馄饨">🍲 馄饨</button>
             </div>
             <div class="menu-list" id="menuList"></div>
-            <div style="text-align:center;padding:12px;font-size:13px;color:#b8a090;">
+            <div class="submit-area">
+                <button class="btn-submit" id="submitOrderBtn">📤 提交订单</button>
+            </div>
+            <div style="text-align:center;padding:4px 12px 16px;font-size:13px;color:#b8a090;">
                 <button id="adminEntryBtn">⚙️ 管理菜单</button>
             </div>
         </div>
@@ -1000,9 +997,9 @@
                 <input type="number" id="inputPrice" placeholder="如：12">
                 <label>角标（如：招牌、人气，留空不显示）</label>
                 <input type="text" id="inputBadge" placeholder="招牌">
-                <label>图片链接（可选，输入图片URL）</label>
+                <label>图片链接（可选）</label>
                 <input type="text" id="inputImage" placeholder="https://example.com/food.jpg">
-                <label>规格（如小份/中份/大份，选填）</label>
+                <label>规格（选填）</label>
                 <div id="specList"></div>
                 <button class="btn-add-spec" id="addSpecBtn">+ 添加规格</button>
                 <button class="btn-save" id="saveBtn">💾 保存</button>
@@ -1015,7 +1012,7 @@
         </div>
 
         <div class="cart-expand-overlay" id="cartExpandOverlay">
-            <div class="cart-expand-panel" id="cartExpandPanel">
+            <div class="cart-expand-panel">
                 <div class="drag-handle"></div>
                 <div class="panel-header">
                     <span class="title">🛒 购物车</span>
@@ -1035,7 +1032,7 @@
             </div>
         </div>
 
-        <div class="cart-bar" id="cartBar">
+        <div class="cart-bar">
             <div class="cart-inner" id="cartInner">
                 <div class="info">
                     <span class="mode-label" id="cartModeLabel">🏠 堂食</span>
@@ -1063,7 +1060,13 @@
 
     <script>
         // ============================================================
-        // 0. 管理员密码保护
+        // Supabase 配置
+        // ============================================================
+        const SUPABASE_URL = 'https://lmwcvvrrzfilfqectvpl.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_t8ieA51rEM-bdCqS-9pTTA_qi_BepvN';
+
+        // ============================================================
+        // 1. 管理员密码
         // ============================================================
         const ADMIN_PASSWORD = '8888';
         let isAdmin = false;
@@ -1077,7 +1080,6 @@
             clickCount++;
             clearTimeout(clickTimer);
             clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
-
             if (clickCount >= 5) {
                 clickCount = 0;
                 const pwd = prompt('🔐 请输入管理员密码：');
@@ -1091,17 +1093,14 @@
             }
         });
 
-        // 默认隐藏管理菜单
-        adminBtn.classList.remove('visible');
-
         // ============================================================
-        // 1. 数据管理
+        // 2. 菜单数据（本地存储 + Supabase）
         // ============================================================
-        const STORAGE_KEY = 'laozhang_menu_data_v2';
+        const STORAGE_KEY = 'laozhang_menu_data_v4';
 
         const DEFAULT_MENU = [
-            { id: 1, name: '韭菜鸡蛋水饺', category: '水饺', desc: '经典素馅 · 16只', price: 12, badge: '招牌',
-                image: '', specs: [{ label: '小份 16只', price: 8 }, { label: '中份 24只', price: 12 }, { label: '大份 30只',
+            { id: 1, name: '韭菜鸡蛋水饺', category: '水饺', desc: '经典素馅 · 16只', price: 12, badge: '招牌', image: '',
+                specs: [{ label: '小份 16只', price: 8 }, { label: '中份 24只', price: 12 }, { label: '大份 30只',
                     price: 15 }] },
             { id: 2, name: '芹菜猪肉水饺', category: '水饺', desc: '芹菜+猪肉 · 15只', price: 10, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
@@ -1112,41 +1111,46 @@
             { id: 4, name: '大馄饨', category: '馄饨', desc: '皮薄馅大 · 12只', price: 12, badge: '', image: '',
                 specs: [{ label: '12只', price: 12 }, { label: '15只', price: 15 }, { label: '20只', price: 20 }] },
             { id: 5, name: '鸡蛋肉丝炒饭', category: '炒饭', desc: '香喷喷的家常味', price: 12, badge: '人气', image: '',
-                specs: [] },
+            specs: [] },
             { id: 6, name: '鸡蛋炒饭', category: '炒饭', desc: '经典原味', price: 8, badge: '', image: '', specs: [] },
             { id: 7, name: '鸡蛋肉丝炒面', category: '炒面', desc: '劲道面条+肉丝', price: 12, badge: '', image: '',
-                specs: [] },
+            specs: [] },
             { id: 8, name: '葱油拌面', category: '汤面', desc: '葱香四溢', price: 8, badge: '', image: '', specs: [] },
             { id: 9, name: '凉拌黄瓜', category: '小菜', desc: '清爽开胃', price: 10, badge: '', image: '', specs: [] },
             { id: 10, name: '荷包蛋', category: '小菜', desc: '煎蛋', price: 2, badge: '', image: '', specs: [] },
         ];
 
-        function loadMenu() {
+        let menuData = [];
+        let nextId = 1;
+
+        function loadMenuLocal() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
-                try { return JSON.parse(stored); } catch (e) {}
+                try {
+                    menuData = JSON.parse(stored);
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    return true;
+                } catch (e) {}
             }
-            return JSON.parse(JSON.stringify(DEFAULT_MENU));
+            return false;
         }
 
-        function saveMenu(menu) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(menu));
+        function saveMenuLocal() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(menuData));
         }
-
-        let menuData = loadMenu();
-        let nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
 
         // ============================================================
-        // 2. 状态
+        // 3. 状态
         // ============================================================
         let currentMode = 'dinein';
         let tableNumber = '06';
         let cart = [];
         let currentCategory = '全部';
         let tempSpecs = [];
+        let isSubmitting = false;
 
         // ============================================================
-        // 3. DOM
+        // 4. DOM
         // ============================================================
         const homePage = document.getElementById('homePage');
         const orderPage = document.getElementById('orderPage');
@@ -1161,6 +1165,7 @@
         const tableBadge = document.getElementById('tableBadge');
         const homeTableNum = document.getElementById('homeTableNum');
         const toastEl = document.getElementById('toast');
+        const submitBtn = document.getElementById('submitOrderBtn');
         const specModal = document.getElementById('specModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalSub = document.getElementById('modalSub');
@@ -1177,7 +1182,74 @@
         let toastTimer = null;
 
         // ============================================================
-        // 4. 工具
+        // 5. Supabase 操作
+        // ============================================================
+        async function loadMenuFromSupabase() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=*&order=id.asc`, {
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('网络请求失败');
+                }
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    menuData = data;
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    saveMenuLocal();
+                    renderMenu();
+                    console.log('✅ 菜单从Supabase加载成功');
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.log('Supabase加载失败：', e);
+                return false;
+            }
+        }
+
+        async function syncMenuToSupabase() {
+            try {
+                // 先删除所有旧数据
+                const deleteResponse = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=id`, {
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    }
+                });
+                const existing = await deleteResponse.json();
+                for (const item of existing) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/menu?id=eq.${item.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_PUBLISHABLE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                        }
+                    });
+                }
+                // 插入新数据
+                for (const item of menuData) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/menu`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_PUBLISHABLE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(item)
+                    });
+                }
+                console.log('✅ 菜单已同步到Supabase');
+            } catch (e) {
+                console.log('同步到Supabase失败：', e);
+            }
+        }
+
+        // ============================================================
+        // 6. 工具
         // ============================================================
         function showToast(msg) {
             toastEl.textContent = msg;
@@ -1218,7 +1290,7 @@
         }
 
         // ============================================================
-        // 5. 渲染
+        // 7. 渲染
         // ============================================================
         function renderMenu() {
             let filtered = menuData;
@@ -1227,7 +1299,7 @@
             }
             if (filtered.length === 0) {
                 menuList.innerHTML =
-                    `<div class="empty-state"><div class="icon">🍽️</div>暂无菜品<br><span style="font-size:13px;">点「管理菜单」添加</span></div>`;
+                    `<div class="empty-state"><div class="icon">🍽️</div>暂无菜品</div>`;
                 return;
             }
             let html = '';
@@ -1241,7 +1313,7 @@
                 } else {
                     totalQty = getCartQty(item.id, 0);
                 }
-                const imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}">` : '🍽️';
+                const imgHtml = item.image ? `<img src="${item.image}">` : '🍽️';
                 html += `
                     <div class="menu-item" data-id="${item.id}">
                         <div class="food-img">${imgHtml}</div>
@@ -1275,21 +1347,17 @@
             tableBadge.textContent = `📍 ${getModeDisplay()}`;
             homeTableNum.textContent = tableNumber;
             switchModeBtn.textContent = currentMode === 'dinein' ? '切换到打包' : '切换到堂食';
+            submitBtn.disabled = count === 0;
             renderExpandCart();
         }
 
         // ============================================================
-        // 6. 购物车展开面板
+        // 8. 购物车展开
         // ============================================================
         function renderExpandCart() {
             if (cart.length === 0) {
-                cartExpandBody.innerHTML = `
-                    <div class="cart-empty-state">
-                        <div class="icon">🛒</div>
-                        <div>购物车是空的</div>
-                        <div style="font-size:13px;color:#b8a090;margin-top:4px;">快去点单吧！</div>
-                    </div>
-                `;
+                cartExpandBody.innerHTML =
+                    `<div class="cart-empty-state"><div class="icon">🛒</div><div>购物车是空的</div></div>`;
                 expandTotal.textContent = '¥0';
                 expandFee.textContent = '';
                 return;
@@ -1323,19 +1391,14 @@
                     const key = this.dataset.key;
                     cart = cart.filter(c => c.key !== key);
                     renderMenu();
-                    if (cart.length === 0) {
-                        closeExpandCart();
-                    }
+                    if (cart.length === 0) closeExpandCart();
                     showToast('已移除');
                 });
             });
         }
 
         function openExpandCart() {
-            if (cart.length === 0) {
-                showToast('🛒 购物车是空的');
-                return;
-            }
+            if (cart.length === 0) { showToast('🛒 购物车是空的'); return; }
             renderExpandCart();
             cartExpandOverlay.classList.add('show');
             document.body.style.overflow = 'hidden';
@@ -1347,7 +1410,7 @@
         }
 
         // ============================================================
-        // 7. 购物车操作
+        // 9. 购物车操作
         // ============================================================
         function addToCart(item, specIndex) {
             const hasSpecs = item.specs && item.specs.length > 0;
@@ -1379,21 +1442,69 @@
             showToast(`-1 · ${item ? item.name : ''}`);
         }
 
-        function handleCheckout() {
+        // ============================================================
+        // 10. 提交订单到Supabase
+        // ============================================================
+        async function submitOrder() {
             if (cart.length === 0) {
                 showToast('🛒 购物车是空的');
                 return;
             }
-            const total = getTotalPrice();
-            const fee = getPackingFee();
-            let detail = cart.map(c => `${c.name}${c.label ? '('+c.label+')' : ''} x${c.qty}`).join('、');
-            if (detail.length > 30) detail = detail.slice(0, 28) + '…';
-            const modeText = currentMode === 'dinein' ? `堂食 · ${tableNumber}号桌` : '打包带走';
-            showToast(`✅ 订单已提交！${modeText}\n${detail}\n总计 ¥${total}${fee > 0 ? ' (含打包费¥'+fee+')' : ''}`);
+            if (isSubmitting) return;
+
+            isSubmitting = true;
+            submitBtn.textContent = '⏳ 提交中...';
+            submitBtn.disabled = true;
+
+            try {
+                const itemsText = cart.map(c =>
+                    `${c.name}${c.label ? '('+c.label+')' : ''} x${c.qty}`
+                ).join('、');
+
+                const total = getTotalPrice();
+                const mode = currentMode;
+                const table = tableNumber;
+
+                const orderData = {
+                    table_number: table,
+                    items: itemsText,
+                    total: total,
+                    mode: mode,
+                    status: '待制作',
+                    create_time: new Date().toISOString()
+                };
+
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('提交订单失败');
+                }
+
+                showToast('✅ 订单已提交！后厨正在制作');
+                cart = [];
+                renderMenu();
+                closeExpandCart();
+
+            } catch (error) {
+                showToast('❌ 提交失败：' + error.message);
+                console.error('提交订单错误：', error);
+            } finally {
+                isSubmitting = false;
+                submitBtn.textContent = '📤 提交订单';
+                submitBtn.disabled = cart.length === 0;
+            }
         }
 
         // ============================================================
-        // 8. 模式切换
+        // 11. 模式切换
         // ============================================================
         function switchMode(newMode) {
             if (newMode === currentMode) return;
@@ -1408,7 +1519,7 @@
         }
 
         // ============================================================
-        // 9. 规格弹窗
+        // 12. 规格弹窗
         // ============================================================
         function openSpecModal(item) {
             selectedSpecItem = item;
@@ -1448,7 +1559,7 @@
         }
 
         // ============================================================
-        // 10. 后台管理
+        // 13. 后台管理
         // ============================================================
         function renderSpecs() {
             const container = document.getElementById('specList');
@@ -1507,7 +1618,7 @@
             document.getElementById('adminForm').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function saveAdminForm() {
+        async function saveAdminForm() {
             const name = document.getElementById('inputName').value.trim();
             const category = document.getElementById('inputCategory').value;
             const desc = document.getElementById('inputDesc').value.trim();
@@ -1531,7 +1642,8 @@
                 menuData.push({ id: nextId++, name, category, desc, price, badge, image, specs });
                 showToast('✅ 已添加');
             }
-            saveMenu(menuData);
+            saveMenuLocal();
+            await syncMenuToSupabase();
             renderAdminList();
             renderMenu();
             document.getElementById('editId').value = '';
@@ -1545,10 +1657,11 @@
             document.getElementById('adminFormTitle').textContent = '➕ 添加菜品';
         }
 
-        function deleteAdminItem(id) {
+        async function deleteAdminItem(id) {
             if (!confirm('确定删除该菜品吗？')) return;
             menuData = menuData.filter(d => d.id !== id);
-            saveMenu(menuData);
+            saveMenuLocal();
+            await syncMenuToSupabase();
             renderAdminList();
             renderMenu();
             showToast('已删除');
@@ -1580,13 +1693,12 @@
         }
 
         // ============================================================
-        // 11. 页面切换
+        // 14. 页面切换
         // ============================================================
         function showHome() {
             homePage.style.display = 'block';
             orderPage.style.display = 'none';
             adminPage.style.display = 'none';
-            updateCartUI();
         }
 
         function showOrder() {
@@ -1604,9 +1716,8 @@
         }
 
         // ============================================================
-        // 12. 事件绑定
+        // 15. 事件绑定
         // ============================================================
-
         document.getElementById('btnDineIn').addEventListener('click', function() {
             currentMode = 'dinein';
             showOrder();
@@ -1655,21 +1766,15 @@
             if (e.target === this) closeModal();
         });
 
-        document.getElementById('checkoutBtn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            handleCheckout();
-        });
+        submitBtn.addEventListener('click', submitOrder);
 
-        // 购物车展开
         document.getElementById('cartInner').addEventListener('click', function(e) {
             if (e.target.closest('.checkout-btn')) return;
             openExpandCart();
         });
-
         cartExpandOverlay.addEventListener('click', function(e) {
             if (e.target === this) closeExpandCart();
         });
-
         document.getElementById('cartCloseBtn').addEventListener('click', closeExpandCart);
 
         document.getElementById('clearCartBtn').addEventListener('click', function() {
@@ -1682,15 +1787,16 @@
         });
 
         document.getElementById('expandCheckoutBtn').addEventListener('click', function() {
-            if (cart.length === 0) {
-                showToast('🛒 购物车是空的');
-                return;
-            }
+            if (cart.length === 0) { showToast('🛒 购物车是空的'); return; }
             closeExpandCart();
-            handleCheckout();
+            submitOrder();
         });
 
-        // 后台管理
+        document.getElementById('checkoutBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            submitOrder();
+        });
+
         document.getElementById('adminEntryBtn').addEventListener('click', showAdmin);
         document.getElementById('adminBackBtn').addEventListener('click', showOrder);
         document.getElementById('addSpecBtn').addEventListener('click', function() {
@@ -1724,21 +1830,34 @@
         });
 
         // ============================================================
-        // 13. 初始化
+        // 16. 初始化
         // ============================================================
         const urlParams = new URLSearchParams(window.location.search);
         const tableParam = urlParams.get('table');
         if (tableParam) tableNumber = tableParam;
         homeTableNum.textContent = tableNumber;
 
+        // 先尝试从Supabase加载菜单
+        loadMenuFromSupabase().then(success => {
+            if (!success) {
+                // 如果Supabase加载失败，使用本地数据
+                if (!loadMenuLocal()) {
+                    menuData = JSON.parse(JSON.stringify(DEFAULT_MENU));
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    saveMenuLocal();
+                    syncMenuToSupabase();
+                }
+                renderMenu();
+            }
+        });
+
         showHome();
         showToast('👋 欢迎光临！请选择用餐方式');
 
-        console.log('🥟 老张家水饺 · 温暖家常风 (购物车展开已修复 + 管理菜单隐藏)');
-        console.log('📋 菜单数据:', menuData);
-        console.log('🔑 桌号:', tableNumber);
+        console.log('🥟 老张家水饺 · Supabase版');
+        console.log('🔑 Supabase URL:', SUPABASE_URL);
         console.log('🔐 管理员密码: 8888 (点击标题5次进入)');
-        console.log('💡 点击底部购物车区域可以展开查看详情');
+        console.log('💡 点击底部购物车可展开查看详情');
     </script>
 
 </body>
