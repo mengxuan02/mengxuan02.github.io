@@ -1257,23 +1257,35 @@
             }
         }
 
-        async function markPaid(orderId) {
-            if (!confirm('确认该订单已收款？')) return;
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_PUBLISHABLE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ paid: true })
-                });
-                showToast('✅ 已标记为已付款');
-                fetchOrders();
-            } catch (e) {
-                showToast('❌ 操作失败');
-            }
+async function markPaid(orderId) {
+    if (!confirm('确认该订单已收款？')) return;
+    try {
+        console.log('📤 正在标记付款, 订单ID:', orderId);
+        
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_PUBLISHABLE_KEY,
+                'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ paid: true })
+        });
+
+        const text = await response.text();
+        console.log('📥 响应状态:', response.status);
+        console.log('📥 响应内容:', text);
+
+        if (!response.ok) {
+            throw new Error('服务器返回: ' + text);
+        }
+        showToast('✅ 已标记为已付款');
+        fetchOrders();
+    } catch (e) {
+        showToast('❌ 操作失败: ' + e.message);
+        console.error('标记付款错误:', e);
+    }
+}
         }
 
         async function markUnpaid(orderId) {
