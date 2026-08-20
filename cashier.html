@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>收银台 · 老张家水饺</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'PingFang SC','Microsoft YaHei',sans-serif}
+        body{background:#f5efe8;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:12px}
+        .app{max-width:420px;width:100%;background:#fdfaf7;border-radius:28px;box-shadow:0 8px 40px rgba(180,120,80,0.12);overflow:hidden;position:relative;min-height:90vh;padding-bottom:90px}
+        .header{background:linear-gradient(145deg,#f8efe6,#fdfaf7);padding:18px 20px 12px;border-bottom:1px solid #f0e4d8;text-align:center}
+        .header h1{font-size:24px;font-weight:700;color:#4a3328;letter-spacing:2px}
+        .header h1 span{color:#c0392b}
+        .header .sub{font-size:13px;color:#a08474;margin-top:2px}
+        .mode-selector{display:flex;padding:8px 16px 12px;background:#fdfaf7;border-bottom:1px solid #f0e4d8}
+        .mode-btn{flex:1;padding:8px;border:2px solid #e8d5c4;background:#fff;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+        .mode-btn:first-child{border-radius:30px 0 0 30px;border-right:none}
+        .mode-btn:last-child{border-radius:0 30px 30px 0;border-left:none}
+        .mode-btn.active{border-color:#c0392b;background:#fdf2ed;color:#c0392b}
+        .mode-btn.pack-active{border-color:#27ae60;background:#eafaf1;color:#27ae60}
+        .table-selector{display:flex;gap:6px;padding:10px 16px;background:#fdfaf7;border-bottom:1px solid #f0e4d8;flex-wrap:wrap;align-items:center}
+        .table-selector .label{font-size:14px;font-weight:600;color:#4a3328;margin-right:2px}
+        .table-btn{padding:4px 14px;border:2px solid #e8d5c4;border-radius:30px;background:#fff;font-size:14px;font-weight:500;color:#4a3328;cursor:pointer}
+        .table-btn.active{border-color:#c0392b;background:#fdf2ed;color:#c0392b}
+        .category-tabs{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;background:#fdfaf7;border-bottom:1px solid #f0e4d8}
+        .category-tabs::-webkit-scrollbar{display:none}
+        .category-tab{flex-shrink:0;padding:5px 16px;border-radius:30px;font-size:13px;font-weight:500;color:#8a7a6a;background:0 0;border:none;cursor:pointer}
+        .category-tab.active{background:#4a3328;color:#fdfaf7}
+        .menu-list{padding:12px 16px 20px;display:flex;flex-direction:column;gap:12px}
+        .menu-item{background:#fff;border-radius:16px;padding:12px 14px;border:1px solid #f0e4d8;display:flex;gap:12px;align-items:center}
+        .menu-item .food-img{width:60px;height:60px;border-radius:12px;background:#f5efe8;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;color:#b8a090;overflow:hidden}
+        .menu-item .food-img img{width:100%;height:100%;object-fit:cover}
+        .menu-item .food-info{flex:1;min-width:0}
+        .menu-item .food-name{font-weight:600;font-size:15px;color:#4a3328;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .menu-item .food-name .badge{font-size:10px;background:#c0392b;color:#fff;padding:0 8px;border-radius:30px;line-height:18px;font-weight:500}
+        .menu-item .food-desc{font-size:12px;color:#a08474;margin-top:1px}
+        .menu-item .food-price{font-weight:700;color:#c0392b;font-size:17px;margin-top:1px}
+        .menu-item .food-price small{font-size:12px;font-weight:400;color:#a08474}
+        .menu-item .item-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+        .menu-item .item-actions button{border:none;width:30px;height:30px;border-radius:30px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .menu-item .item-actions .btn-minus{background:#f5efe8;color:#4a3328}
+        .menu-item .item-actions .btn-plus{background:#c0392b;color:#fff}
+        .menu-item .item-actions .btn-plus:active{background:#a83226;transform:scale(.92)}
+        .menu-item .item-actions .qty-num{min-width:22px;text-align:center;font-weight:600;font-size:15px;color:#4a3328}
+        .cart-bar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;padding:10px 16px 18px;background:linear-gradient(to top,rgba(253,250,247,.95) 60%,transparent);pointer-events:none;z-index:100}
+        .cart-inner{max-width:420px;width:100%;background:#4a3328;border-radius:60px;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 32px rgba(74,51,40,.25);pointer-events:auto;cursor:pointer}
+        .cart-inner .info{display:flex;align-items:baseline;gap:10px;color:#fdfaf7;font-size:13px;flex:1;min-width:0;pointer-events:none}
+        .cart-inner .info .total{font-size:19px;font-weight:700}
+        .cart-inner .info .count{background:#c0392b;padding:1px 10px;border-radius:30px;font-size:12px;font-weight:500;flex-shrink:0}
+        .cart-inner .info .mode-label{font-size:11px;opacity:.7;flex-shrink:0}
+        .cart-inner .checkout-btn{background:#c0392b;border:none;color:#fff;padding:6px 18px;border-radius:60px;font-weight:600;font-size:14px;cursor:pointer;flex-shrink:0;margin-left:6px;pointer-events:auto;position:relative;z-index:2}
+        .cart-inner .checkout-btn:active{transform:scale(.94);background:#a83226}
+        .cart-expand-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(74,51,40,.4);z-index:999;display:none;justify-content:center;align-items:flex-end;padding:0 16px 20px;opacity:0;transition:opacity .3s}
+        .cart-expand-overlay.show{display:flex;opacity:1}
+        .cart-expand-overlay.show .cart-expand-panel{transform:translateY(0)}
+        .cart-expand-panel{max-width:420px;width:100%;background:#fdfaf7;border-radius:24px 24px 20px 20px;padding:16px 18px 20px;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-height:60vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(74,51,40,.15);z-index:1000}
+        .cart-expand-panel .drag-handle{width:36px;height:4px;background:#d5c4b8;border-radius:4px;margin:0 auto 12px;flex-shrink:0}
+        .cart-expand-panel .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0}
+        .cart-expand-panel .panel-header .title{font-size:17px;font-weight:700;color:#4a3328}
+        .cart-expand-panel .panel-header .close-btn{background:#f5efe8;border:none;padding:3px 12px;border-radius:30px;font-size:13px;color:#8a7a6a;cursor:pointer}
+        .cart-expand-panel .panel-body{flex:1;overflow-y:auto;padding-right:4px}
+        .cart-expand-panel .panel-body::-webkit-scrollbar{width:3px}
+        .cart-expand-panel .panel-body::-webkit-scrollbar-thumb{background:#d5c4b8;border-radius:4px}
+        .cart-item-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0e4d8}
+        .cart-item-row .item-left{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+        .cart-item-row .item-left .name{font-weight:500;color:#4a3328;font-size:14px}
+        .cart-item-row .item-left .spec{font-size:12px;color:#a08474}
+        .cart-item-row .item-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+        .cart-item-row .item-right .subtotal{font-weight:600;color:#c0392b;font-size:14px}
+        .cart-item-row .item-right .del-btn{background:#f0e4d8;border:none;padding:3px 10px;border-radius:30px;font-size:11px;color:#a83226;cursor:pointer;font-weight:500}
+        .cart-expand-panel .panel-footer{margin-top:12px;padding-top:12px;border-top:1px solid #f0e4d8;flex-shrink:0}
+        .cart-expand-panel .panel-footer .summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .cart-expand-panel .panel-footer .summary .label{color:#8a7a6a;font-size:14px}
+        .cart-expand-panel .panel-footer .summary .amount{font-size:19px;font-weight:700;color:#4a3328}
+        .cart-expand-panel .panel-footer .summary .amount .fee{font-size:13px;font-weight:400;color:#a08474}
+        .cart-expand-panel .panel-footer .actions{display:flex;gap:8px}
+        .cart-expand-panel .panel-footer .actions button{flex:1;padding:10px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
+        .cart-expand-panel .panel-footer .actions .clear-btn{background:#f5efe8;color:#8a7a6a}
+        .cart-expand-panel .panel-footer .actions .checkout-btn2{background:#c0392b;color:#fff}
+        .cart-empty-state{text-align:center;padding:24px 0;color:#b8a090}
+        .cart-empty-state .icon{font-size:36px;margin-bottom:6px}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(74,51,40,.5);justify-content:center;align-items:center;z-index:1100;padding:24px}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:#fdfaf7;border-radius:24px;max-width:360px;width:100%;padding:24px 20px 18px;box-shadow:0 20px 60px rgba(74,51,40,.3);animation:modalIn .2s ease}
+        @keyframes modalIn{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+        .modal-title{font-size:19px;font-weight:700;color:#4a3328}
+        .modal-sub{font-size:13px;color:#a08474;margin-bottom:14px}
+        .modal-option{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid #f0e4d8;border-radius:12px;margin-bottom:6px;cursor:pointer}
+        .modal-option .opt-label{font-weight:500;color:#4a3328}
+        .modal-option .opt-price{font-weight:600;color:#c0392b}
+        .modal-option.active{border-color:#c0392b;background:#fdf2ed}
+        .modal-footer{display:flex;gap:8px;margin-top:14px}
+        .modal-footer button{flex:1;padding:10px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
+        .modal-btn-cancel{background:#f5efe8;color:#8a7a6a}
+        .modal-btn-confirm{background:#c0392b;color:#fff}
+        .toast{position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#4a3328;color:#fdfaf7;padding:8px 22px;border-radius:60px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(74,51,40,.2);opacity:0;transition:opacity .25s;pointer-events:none;z-index:9999;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+        .toast.show{opacity:1}
+        .empty-state{text-align:center;padding:30px 20px;color:#b8a090}
+        .admin-link{text-align:center;padding:6px 12px 14px;font-size:12px;color:#b8a090}
+        .admin-link button{background:0 0;border:none;color:#b8a090;text-decoration:underline;font-size:12px;cursor:pointer}
+        .order-tabs{display:flex;gap:4px;padding:8px 16px;background:#fdfaf7;border-bottom:1px solid #f0e4d8;overflow-x:auto}
+        .order-tab{flex-shrink:0;padding:4px 14px;border:1px solid #e8d5c4;border-radius:20px;background:#fff;font-size:12px;font-weight:500;color:#4a3328;cursor:pointer}
+        .order-tab.active{background:#4a3328;color:#fff;border-color:#4a3328}
+        .order-tab .count{background:#c0392b;color:#fff;padding:0 6px;border-radius:30px;font-size:10px;margin-left:4px}
+        .order-tab.active .count{background:#fdfaf7;color:#4a3328}
+        .order-list{padding:12px 16px 20px;display:flex;flex-direction:column;gap:10px}
+        .order-card{background:#fff;border-radius:14px;padding:12px 14px;border:1px solid #f0e4d8}
+        .order-card .order-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f0e4d8}
+        .order-card .order-header .table{font-weight:700;color:#4a3328;font-size:15px}
+        .order-card .order-header .time{font-size:12px;color:#a08474}
+        .order-card .order-items{padding:8px 0;font-size:14px;color:#4a3328}
+        .order-card .order-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid #f0e4d8;flex-wrap:wrap;gap:6px}
+        .order-card .order-footer .total{font-weight:700;color:#c0392b;font-size:17px}
+        .order-card .order-footer .status-badge{font-size:11px;padding:2px 10px;border-radius:30px;font-weight:500}
+        .status-badge.done{background:#e8f5e9;color:#27ae60}
+        .status-badge.paid{background:#e8f5e9;color:#27ae60}
+        .status-badge.unpaid{background:#ffebee;color:#c0392b}
+        .order-card .order-footer .actions{display:flex;gap:4px}
+        .order-card .order-footer .actions button{border:none;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer}
+        .btn-pay{background:#27ae60;color:#fff}
+        .btn-unpay{background:#f5efe8;color:#4a3328}
+        #adminPage{display:none;padding:16px}
+        #adminPage .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        #adminPage .admin-header h2{color:#4a3328;font-size:20px}
+        #adminPage .admin-header .back-btn{background:#f5efe8;border:none;padding:6px 18px;border-radius:40px;font-size:14px;cursor:pointer;color:#4a3328}
+        .admin-form{background:#fff;border-radius:16px;padding:18px;border:1px solid #f0e4d8;margin-bottom:16px}
+        .admin-form label{display:block;font-size:14px;font-weight:500;color:#4a3328;margin-bottom:4px}
+        .admin-form input,.admin-form select{width:100%;padding:8px 12px;border:1px solid #f0e4d8;border-radius:10px;font-size:15px;background:#fdfaf7;margin-bottom:10px;color:#4a3328}
+        .admin-form .btn-add-spec{border:1px dashed #d5c4b8;background:0 0;padding:6px;border-radius:8px;width:100%;color:#8a7a6a;cursor:pointer;font-size:13px;margin-bottom:10px}
+        .admin-form .btn-save{width:100%;padding:10px;border:none;border-radius:12px;background:#c0392b;color:#fff;font-size:16px;font-weight:600;cursor:pointer}
+        .admin-form .btn-cancel{width:100%;padding:10px;border:none;border-radius:12px;background:#f5efe8;color:#8a7a6a;font-size:16px;font-weight:500;cursor:pointer;margin-top:6px}
+        .admin-list-item{background:#fff;border-radius:12px;padding:10px 14px;border:1px solid #f0e4d8;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+        .admin-list-item .info .name{font-weight:600;color:#4a3328}
+        .admin-list-item .info .price{color:#c0392b;font-weight:600;margin-left:6px}
+        .admin-list-item .actions button{border:none;background:0 0;font-size:13px;padding:3px 12px;border-radius:20px;cursor:pointer}
+        .admin-list-item .actions .edit{background:#e8d5c4;color:#4a3328}
+        .admin-list-item .actions .del{background:#f0e4d8;color:#a83226}
+        .spec-row{display:flex;gap:6px;align-items:center;margin-bottom:4px}
+        .spec-row input{flex:1;padding:6px 10px;border:1px solid #f0e4d8;border-radius:8px;font-size:14px;background:#fdfaf7;margin-bottom:0!important}
+        .spec-row input[type=number]{max-width:70px}
+        .spec-row button{border:none;background:#f0e4d8;color:#a83226;padding:4px 10px;border-radius:6px;font-size:14px;cursor:pointer}
+        @media(max-width:420px){body{padding:8px}.app{border-radius:20px}.menu-item .food-img{width:50px;height:50px;font-size:24px}.cart-expand-panel{padding:14px 14px 18px}.table-btn{font-size:12px;padding:3px 10px}.order-tab{font-size:11px;padding:3px 10px}}
+    </style>
+</head>
+<body>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="app" id="app">
+
+        <div class="header">
+            <h1>🥟 老张家<span>水饺</span></h1>
+            <div class="sub">· 收银台 ·</div>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" id="modeDineIn" data-mode="dinein">🏠 堂食</button>
+            <button class="mode-btn" id="modePack" data-mode="pack">📦 打包</button>
+        </div>
+
+        <div class="table-selector" id="tableSelector">
+            <span class="label">🪑 桌号：</span>
+            <button class="table-btn active" data-table="01">01</button>
+            <button class="table-btn" data-table="02">02</button>
+            <button class="table-btn" data-table="03">03</button>
+            <button class="table-btn" data-table="04">04</button>
+            <button class="table-btn" data-table="05">05</button>
+            <button class="table-btn" data-table="06">06</button>
+            <button class="table-btn" data-table="07">07</button>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab active" data-cat="全部">🔥 全部</button>
+            <button class="category-tab" data-cat="水饺">🥟 水饺</button>
+            <button class="category-tab" data-cat="炒饭">🍳 炒饭</button>
+            <button class="category-tab" data-cat="炒面">🍝 炒面</button>
+            <button class="category-tab" data-cat="汤面">🍜 汤面</button>
+            <button class="category-tab" data-cat="小菜">🥗 小菜</button>
+            <button class="category-tab" data-cat="馄饨">🍲 馄饨</button>
+        </div>
+
+        <div class="menu-list" id="menuList"></div>
+
+        <div style="padding:0 16px 8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:700;color:#4a3328;font-size:16px;">📋 今日订单</span>
+                <button onclick="fetchOrders()" style="background:none;border:none;color:#8a7a6a;font-size:13px;text-decoration:underline;cursor:pointer;">🔄 刷新</button>
+            </div>
+            <div class="order-tabs" id="orderTabs">
+                <button class="order-tab active" data-filter="all">全部 <span class="count" id="countAll">0</span></button>
+                <button class="order-tab" data-filter="unpaid">待付款 <span class="count" id="countUnpaid">0</span></button>
+                <button class="order-tab" data-filter="paid">已付款 <span class="count" id="countPaid">0</span></button>
+            </div>
+            <div class="order-list" id="orderList">
+                <div style="text-align:center;padding:20px;color:#b8a090;font-size:14px;">暂无订单</div>
+            </div>
+        </div>
+
+        <div class="admin-link">
+            <button id="adminEntryBtn">⚙️ 管理菜单</button>
+        </div>
+
+        <div class="cart-bar">
+            <div class="cart-inner" id="cartInner">
+                <div class="info">
+                    <span class="mode-label" id="cartModeLabel">🏠 01号桌</span>
+                    <span class="total" id="cartTotal">¥0</span>
+                    <span class="count" id="cartCount">0</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">下单</button>
+            </div>
+        </div>
+
+        <div class="cart-expand-overlay" id="cartExpandOverlay">
+            <div class="cart-expand-panel">
+                <div class="drag-handle"></div>
+                <div class="panel-header">
+                    <span class="title">🛒 购物车</span>
+                    <button class="close-btn" id="cartCloseBtn">收起</button>
+                </div>
+                <div class="panel-body" id="cartExpandBody"></div>
+                <div class="panel-footer">
+                    <div class="summary">
+                        <span class="label">总计</span>
+                        <span class="amount" id="expandTotal">¥0 <span class="fee" id="expandFee"></span></span>
+                    </div>
+                    <div class="actions">
+                        <button class="clear-btn" id="clearCartBtn">🗑️ 清空</button>
+                        <button class="checkout-btn2" id="expandCheckoutBtn">下单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="specModal">
+            <div class="modal-box">
+                <div class="modal-title" id="modalTitle">选择规格</div>
+                <div class="modal-sub" id="modalSub">请选择份量</div>
+                <div id="modalOptions"></div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="modalCancel">取消</button>
+                    <button class="modal-btn-confirm" id="modalConfirm">确认添加</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="adminPage">
+            <div class="admin-header">
+                <h2>⚙️ 菜单管理</h2>
+                <button class="back-btn" id="adminBackBtn">← 返回</button>
+            </div>
+            <div class="admin-form" id="adminForm">
+                <h3 style="margin-bottom:10px;color:#4a3328;" id="adminFormTitle">➕ 添加菜品</h3>
+                <input type="hidden" id="editId" value="">
+                <label>菜名</label>
+                <input type="text" id="inputName" placeholder="如：韭菜鸡蛋水饺">
+                <label>分类</label>
+                <select id="inputCategory">
+                    <option value="水饺">🥟 水饺</option>
+                    <option value="炒饭">🍳 炒饭</option>
+                    <option value="炒面">🍝 炒面</option>
+                    <option value="汤面">🍜 汤面</option>
+                    <option value="小菜">🥗 小菜</option>
+                    <option value="馄饨">🍲 馄饨</option>
+                </select>
+                <label>描述</label>
+                <input type="text" id="inputDesc" placeholder="如：经典素馅 · 16只">
+                <label>价格</label>
+                <input type="number" id="inputPrice" placeholder="如：12">
+                <label>角标</label>
+                <input type="text" id="inputBadge" placeholder="招牌">
+                <label>图片链接</label>
+                <input type="text" id="inputImage" placeholder="https://example.com/food.jpg">
+                <label>规格</label>
+                <div id="specList"></div>
+                <button class="btn-add-spec" id="addSpecBtn">+ 添加规格</button>
+                <button class="btn-save" id="saveBtn">💾 保存</button>
+                <button class="btn-cancel" id="cancelBtn">取消</button>
+            </div>
+            <div id="adminList">
+                <div style="font-weight:600;color:#4a3328;margin-bottom:6px;">📋 当前菜品</div>
+                <div id="adminItemList"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // Supabase 配置
+        // ============================================================
+        const SUPABASE_URL = 'https://lmwcvvrrzfilfqectvpl.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_t8ieA51rEM-bdCqS-9pTTA_qi_BepvN';
+
+        // ============================================================
+        // 菜单数据
+        // ============================================================
+        const STORAGE_KEY = 'laozhang_menu_data_v4';
+        const DEFAULT_MENU = [
+            { id: 1, name: '韭菜鸡蛋水饺', category: '水饺', desc: '经典素馅 · 16只', price: 12, badge: '招牌', image: '',
+                specs: [{ label: '小份 16只', price: 8 }, { label: '中份 24只', price: 12 }, { label: '大份 30只',
+                    price: 15 }] },
+            { id: 2, name: '芹菜猪肉水饺', category: '水饺', desc: '芹菜+猪肉 · 15只', price: 10, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { id: 3, name: '韭菜猪肉水饺', category: '水饺', desc: '韭菜+猪肉 · 15只', price: 10, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { id: 4, name: '大馄饨', category: '馄饨', desc: '皮薄馅大 · 12只', price: 12, badge: '', image: '',
+                specs: [{ label: '12只', price: 12 }, { label: '15只', price: 15 }, { label: '20只', price: 20 }] },
+            { id: 5, name: '鸡蛋肉丝炒饭', category: '炒饭', desc: '香喷喷的家常味', price: 12, badge: '人气', image: '',
+            specs: [] },
+            { id: 6, name: '鸡蛋炒饭', category: '炒饭', desc: '经典原味', price: 8, badge: '', image: '', specs: [] },
+            { id: 7, name: '鸡蛋肉丝炒面', category: '炒面', desc: '劲道面条+肉丝', price: 12, badge: '', image: '',
+            specs: [] },
+            { id: 8, name: '葱油拌面', category: '汤面', desc: '葱香四溢', price: 8, badge: '', image: '', specs: [] },
+            { id: 9, name: '凉拌黄瓜', category: '小菜', desc: '清爽开胃', price: 10, badge: '', image: '', specs: [] },
+            { id: 10, name: '荷包蛋', category: '小菜', desc: '煎蛋', price: 2, badge: '', image: '', specs: [] },
+        ];
+
+        let menuData = [];
+        let nextId = 1;
+        let orders = [];
+        let orderFilter = 'all';
+
+        function loadMenuLocal() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    menuData = JSON.parse(stored);
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    return true;
+                } catch (e) {}
+            }
+            return false;
+        }
+
+        function saveMenuLocal() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(menuData));
+        }
+
+        async function loadMenuFromSupabase() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=*&order=id.asc`, {
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    }
+                });
+                if (!response.ok) throw new Error('网络请求失败');
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    menuData = data;
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    saveMenuLocal();
+                    renderMenu();
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.log('Supabase加载失败：', e);
+                return false;
+            }
+        }
+
+        async function syncMenuToSupabase() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=id`, {
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    }
+                });
+                const existing = await response.json();
+                for (const item of existing) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/menu?id=eq.${item.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_PUBLISHABLE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                        }
+                    });
+                }
+                for (const item of menuData) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/menu`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_PUBLISHABLE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(item)
+                    });
+                }
+                console.log('✅ 菜单已同步到Supabase');
+            } catch (e) {
+                console.log('同步失败：', e);
+            }
+        }
+
+        // ============================================================
+        // 订单操作（修复版）
+        // ============================================================
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&order=create_time.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    }
+                });
+                if (!response.ok) throw new Error('获取订单失败');
+                orders = await response.json();
+                renderOrders();
+            } catch (e) {
+                console.log('获取订单失败：', e);
+            }
+        }
+
+        // ⚠️ 重点：修复后的 markPaid 函数
+        async function markPaid(orderId) {
+            if (!confirm('确认该订单已收款？')) return;
+            try {
+                console.log('📤 正在标记付款, 订单ID:', orderId);
+                
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paid: true })
+                });
+                
+                const text = await response.text();
+                console.log('📥 响应状态:', response.status);
+                console.log('📥 响应内容:', text);
+                
+                if (!response.ok) {
+                    throw new Error('服务器返回: ' + text);
+                }
+                showToast('✅ 已标记为已付款');
+                await fetchOrders(); // 等待刷新完成
+            } catch (e) {
+                showToast('❌ 操作失败: ' + e.message);
+                console.error('❌ 标记付款错误:', e);
+            }
+        }
+
+        async function markUnpaid(orderId) {
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paid: false })
+                });
+                showToast('已标记为待付款');
+                fetchOrders();
+            } catch (e) {
+                showToast('❌ 操作失败');
+            }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('orderList');
+            const all = orders;
+            const unpaid = orders.filter(o => o.paid !== true && o.status !== '已完成');
+            const paid = orders.filter(o => o.paid === true || o.status === '已完成');
+
+            document.getElementById('countAll').textContent = all.length;
+            document.getElementById('countUnpaid').textContent = unpaid.length;
+            document.getElementById('countPaid').textContent = paid.length;
+
+            let filtered = all;
+            if (orderFilter === 'unpaid') filtered = unpaid;
+            else if (orderFilter === 'paid') filtered = paid;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="text-align:center;padding:20px;color:#b8a090;font-size:14px;">暂无订单</div>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(order => {
+                const isPaid = order.paid === true;
+                const isDone = order.status === '已完成';
+                const time = order.create_time ? new Date(order.create_time).toLocaleTimeString('zh-CN', { hour: '2-digit',
+                    minute: '2-digit' }) : '';
+                let statusText = '';
+                let statusClass = '';
+                if (isDone) {
+                    statusText = '✅ 已完成';
+                    statusClass = 'done';
+                } else if (isPaid) {
+                    statusText = '💰 已付款';
+                    statusClass = 'paid';
+                } else {
+                    statusText = '⏳ 待付款';
+                    statusClass = 'unpaid';
+                }
+
+                html += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="table">${order.mode === 'pack' ? '📦打包' : '🏠'+order.table_number+'号桌'}</span>
+                            <span class="time">${time}</span>
+                        </div>
+                        <div class="order-items">${order.items || '菜品'}</div>
+                        <div class="order-footer">
+                            <span class="total">¥${order.total || 0}</span>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            <div class="actions">
+                                ${!isDone ? `
+                                    ${!isPaid ? `<button class="btn-pay" onclick="markPaid('${order.id}')">💰 已收款</button>` : `<button class="btn-unpay" onclick="markUnpaid('${order.id}')">↩️ 取消</button>`}
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // 状态
+        // ============================================================
+        let currentMode = 'dinein';
+        let tableNumber = '01';
+        let cart = [];
+        let currentCategory = '全部';
+        let tempSpecs = [];
+        let isSubmitting = false;
+
+        // ============================================================
+        // DOM
+        // ============================================================
+        const menuList = document.getElementById('menuList');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartCount = document.getElementById('cartCount');
+        const cartModeLabel = document.getElementById('cartModeLabel');
+        const toastEl = document.getElementById('toast');
+        const submitBtn = document.getElementById('checkoutBtn');
+        const expandCheckoutBtn = document.getElementById('expandCheckoutBtn');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const cartCloseBtn = document.getElementById('cartCloseBtn');
+        const cartInner = document.getElementById('cartInner');
+        const cartExpandOverlay = document.getElementById('cartExpandOverlay');
+        const cartExpandBody = document.getElementById('cartExpandBody');
+        const expandTotal = document.getElementById('expandTotal');
+        const expandFee = document.getElementById('expandFee');
+
+        let toastTimer = null;
+
+        // ============================================================
+        // 工具
+        // ============================================================
+        function showToast(msg) {
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+        }
+
+        function getCartQty(itemId, specIndex) {
+            const key = itemId + '-' + specIndex;
+            const entry = cart.find(c => c.key === key);
+            return entry ? entry.qty : 0;
+        }
+
+        function getTotalItems() {
+            return cart.reduce((sum, c) => sum + c.qty, 0);
+        }
+
+        function getTotalPrice() {
+            let total = 0;
+            cart.forEach(c => { total += c.price * c.qty; });
+            if (currentMode === 'pack') {
+                total += getTotalItems();
+            }
+            return total;
+        }
+
+        function getPackingFee() {
+            return currentMode === 'pack' ? getTotalItems() : 0;
+        }
+
+        function getModeLabel() {
+            return currentMode === 'dinein' ? '🏠 ' + tableNumber + '号桌' : '📦 打包';
+        }
+
+        // ============================================================
+        // 渲染
+        // ============================================================
+        function renderMenu() {
+            let filtered = menuData;
+            if (currentCategory !== '全部') {
+                filtered = menuData.filter(item => item.category === currentCategory);
+            }
+            if (filtered.length === 0) {
+                menuList.innerHTML =
+                    `<div class="empty-state"><div class="icon">🍽️</div>暂无菜品</div>`;
+                return;
+            }
+            let html = '';
+            filtered.forEach(item => {
+                const hasSpecs = item.specs && item.specs.length > 0;
+                const displayPrice = hasSpecs ? item.specs[0].price : item.price;
+                const badgeHtml = item.badge ? `<span class="badge">${item.badge}</span>` : '';
+                let totalQty = 0;
+                if (hasSpecs) {
+                    item.specs.forEach((_, idx) => { totalQty += getCartQty(item.id, idx); });
+                } else {
+                    totalQty = getCartQty(item.id, 0);
+                }
+                const imgHtml = item.image ? `<img src="${item.image}">` : '🍽️';
+                html += `
+                    <div class="menu-item" data-id="${item.id}">
+                        <div class="food-img">${imgHtml}</div>
+                        <div class="food-info">
+                            <div class="food-name">${item.name} ${badgeHtml}</div>
+                            <div class="food-desc">${item.desc || ''}</div>
+                            <div class="food-price">¥${displayPrice} ${hasSpecs ? '<small>起</small>' : ''}</div>
+                        </div>
+                        <div class="item-actions">
+                            ${totalQty > 0 ? `<button class="btn-minus" data-action="decr" data-id="${item.id}">−</button>` : ''}
+                            ${totalQty > 0 ? `<span class="qty-num">${totalQty}</span>` : ''}
+                            <button class="btn-plus" data-action="incr" data-id="${item.id}">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            menuList.innerHTML = html;
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const total = getTotalPrice();
+            const count = getTotalItems();
+            const fee = getPackingFee();
+            cartTotal.textContent = '¥' + total.toFixed(0);
+            cartCount.textContent = count;
+            cartModeLabel.textContent = getModeLabel() + (currentMode === 'pack' && count > 0 ? ` (打包费¥${fee})` : '');
+            submitBtn.disabled = count === 0;
+            expandCheckoutBtn.disabled = count === 0;
+            renderExpandCart();
+        }
+
+        // ============================================================
+        // 购物车展开
+        // ============================================================
+        function renderExpandCart() {
+            if (cart.length === 0) {
+                cartExpandBody.innerHTML =
+                    `<div class="cart-empty-state"><div class="icon">🛒</div><div>购物车是空的</div></div>`;
+                expandTotal.textContent = '¥0';
+                expandFee.textContent = '';
+                return;
+            }
+            let html = '';
+            cart.forEach(c => {
+                const subtotal = c.price * c.qty;
+                html += `
+                    <div class="cart-item-row" data-key="${c.key}">
+                        <div class="item-left">
+                            <span class="name">${c.name}</span>
+                            <span class="spec">${c.label || '默认'} × ${c.qty}</span>
+                        </div>
+                        <div class="item-right">
+                            <span class="subtotal">¥${subtotal}</span>
+                            <button class="del-btn" data-key="${c.key}">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            cartExpandBody.innerHTML = html;
+
+            const total = getTotalPrice();
+            const fee = getPackingFee();
+            expandTotal.textContent = '¥' + total.toFixed(0);
+            expandFee.textContent = fee > 0 ? `(含打包费 ¥${fee})` : '';
+
+            cartExpandBody.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const key = this.dataset.key;
+                    cart = cart.filter(c => c.key !== key);
+                    renderMenu();
+                    if (cart.length === 0) closeExpandCart();
+                    showToast('已移除');
+                });
+            });
+        }
+
+        function openExpandCart() {
+            if (cart.length === 0) { showToast('🛒 购物车是空的'); return; }
+            renderExpandCart();
+            cartExpandOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeExpandCart() {
+            cartExpandOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================================
+        // 购物车操作
+        // ============================================================
+        function addToCart(item, specIndex) {
+            const hasSpecs = item.specs && item.specs.length > 0;
+            const spec = hasSpecs ? item.specs[specIndex] : null;
+            const price = spec ? spec.price : item.price;
+            const label = spec ? spec.label : '';
+            const key = item.id + '-' + specIndex;
+            const existing = cart.find(c => c.key === key);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ key, id: item.id, name: item.name, label, price, qty: 1 });
+            }
+            renderMenu();
+            showToast(`+1 · ${item.name}${label ? ' ('+label+')' : ''}`);
+        }
+
+        function removeFromCart(itemId) {
+            const entries = cart.filter(c => c.id === itemId);
+            if (entries.length === 0) return;
+            const last = entries[entries.length - 1];
+            if (last.qty > 1) {
+                last.qty -= 1;
+            } else {
+                cart = cart.filter(c => c.key !== last.key);
+            }
+            renderMenu();
+            const item = menuData.find(d => d.id === itemId);
+            showToast(`-1 · ${item ? item.name : ''}`);
+        }
+
+        // ============================================================
+        // 提交订单
+        // ============================================================
+        async function submitOrder() {
+            if (cart.length === 0) {
+                showToast('🛒 购物车是空的');
+                return;
+            }
+            if (isSubmitting) return;
+
+            isSubmitting = true;
+            submitBtn.textContent = '⏳ 提交...';
+            submitBtn.disabled = true;
+
+            try {
+                const itemsText = cart.map(c =>
+                    `${c.name}${c.label ? '('+c.label+')' : ''} x${c.qty}`
+                ).join('、');
+
+                const total = getTotalPrice();
+                const mode = currentMode;
+                const table = mode === 'dinein' ? tableNumber : '打包';
+
+                const orderData = {
+                    table_number: table,
+                    items: itemsText,
+                    total: total,
+                    mode: mode,
+                    status: '待制作',
+                    paid: false,
+                    create_time: new Date().toISOString()
+                };
+
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!response.ok) throw new Error('提交失败');
+
+                showToast('✅ 订单已提交！');
+                cart = [];
+                renderMenu();
+                closeExpandCart();
+                fetchOrders();
+
+            } catch (error) {
+                showToast('❌ 提交失败：' + error.message);
+            } finally {
+                isSubmitting = false;
+                submitBtn.textContent = '下单';
+                submitBtn.disabled = cart.length === 0;
+            }
+        }
+
+        // ============================================================
+        // 规格弹窗
+        // ============================================================
+        let selectedSpecItem = null;
+        let selectedSpecIndex = 0;
+        const specModal = document.getElementById('specModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSub = document.getElementById('modalSub');
+        const modalOptions = document.getElementById('modalOptions');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
+
+        function openSpecModal(item) {
+            selectedSpecItem = item;
+            selectedSpecIndex = 0;
+            modalTitle.textContent = item.name;
+            modalSub.textContent = '请选择份量';
+            let html = '';
+            item.specs.forEach((spec, idx) => {
+                const active = idx === 0 ? ' active' : '';
+                html += `
+                    <div class="modal-option${active}" data-index="${idx}">
+                        <span class="opt-label">${spec.label}</span>
+                        <span class="opt-price">¥${spec.price}</span>
+                    </div>
+                `;
+            });
+            modalOptions.innerHTML = html;
+            modalOptions.querySelectorAll('.modal-option').forEach(el => {
+                el.addEventListener('click', function() {
+                    modalOptions.querySelectorAll('.modal-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedSpecIndex = parseInt(this.dataset.index);
+                });
+            });
+            specModal.classList.add('show');
+        }
+
+        function closeModal() {
+            specModal.classList.remove('show');
+            selectedSpecItem = null;
+        }
+
+        function confirmModal() {
+            if (!selectedSpecItem) return;
+            addToCart(selectedSpecItem, selectedSpecIndex);
+            closeModal();
+        }
+
+        // ============================================================
+        // 订单筛选
+        // ============================================================
+        document.getElementById('orderTabs').addEventListener('click', function(e) {
+            const tab = e.target.closest('.order-tab');
+            if (!tab) return;
+            document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            orderFilter = tab.dataset.filter;
+            renderOrders();
+        });
+
+        // ============================================================
+        // 后台管理
+        // ============================================================
+        let isAdmin = false;
+        let clickCount = 0;
+        let clickTimer = null;
+
+        document.querySelector('.header h1').addEventListener('click', function() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+            if (clickCount >= 5) {
+                clickCount = 0;
+                const pwd = prompt('🔐 请输入管理员密码：');
+                if (pwd === '8888') {
+                    isAdmin = true;
+                    document.getElementById('adminEntryBtn').style.display = 'inline';
+                    showToast('✅ 管理员已登录');
+                } else if (pwd !== null) {
+                    showToast('❌ 密码错误');
+                }
+            }
+        });
+
+        function renderSpecs() {
+            const container = document.getElementById('specList');
+            let html = '';
+            tempSpecs.forEach((spec, idx) => {
+                html += `
+                    <div class="spec-row">
+                        <input type="text" placeholder="规格名" value="${spec.label}" data-spec-label="${idx}">
+                        <input type="number" placeholder="价格" value="${spec.price}" data-spec-price="${idx}">
+                        <button data-spec-del="${idx}">✕</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('[data-spec-label]').forEach(el => {
+                el.addEventListener('input', function() {
+                    tempSpecs[parseInt(this.dataset.specLabel)].label = this.value;
+                });
+            });
+            container.querySelectorAll('[data-spec-price]').forEach(el => {
+                el.addEventListener('input', function() {
+                    tempSpecs[parseInt(this.dataset.specPrice)].price = parseFloat(this.value) || 0;
+                });
+            });
+            container.querySelectorAll('[data-spec-del]').forEach(el => {
+                el.addEventListener('click', function() {
+                    tempSpecs.splice(parseInt(this.dataset.specDel), 1);
+                    renderSpecs();
+                });
+            });
+        }
+
+        function openAdminForm(item) {
+            if (item) {
+                document.getElementById('adminFormTitle').textContent = '✏️ 编辑菜品';
+                document.getElementById('editId').value = item.id;
+                document.getElementById('inputName').value = item.name;
+                document.getElementById('inputCategory').value = item.category || '水饺';
+                document.getElementById('inputDesc').value = item.desc || '';
+                document.getElementById('inputPrice').value = item.price;
+                document.getElementById('inputBadge').value = item.badge || '';
+                document.getElementById('inputImage').value = item.image || '';
+                tempSpecs = (item.specs || []).map(s => ({ label: s.label, price: s.price }));
+            } else {
+                document.getElementById('adminFormTitle').textContent = '➕ 添加菜品';
+                document.getElementById('editId').value = '';
+                document.getElementById('inputName').value = '';
+                document.getElementById('inputCategory').value = '水饺';
+                document.getElementById('inputDesc').value = '';
+                document.getElementById('inputPrice').value = '';
+                document.getElementById('inputBadge').value = '';
+                document.getElementById('inputImage').value = '';
+                tempSpecs = [];
+            }
+            renderSpecs();
+        }
+
+        async function saveAdminForm() {
+            const name = document.getElementById('inputName').value.trim();
+            const category = document.getElementById('inputCategory').value;
+            const desc = document.getElementById('inputDesc').value.trim();
+            const price = parseFloat(document.getElementById('inputPrice').value);
+            const badge = document.getElementById('inputBadge').value.trim();
+            const image = document.getElementById('inputImage').value.trim();
+            const editId = document.getElementById('editId').value;
+
+            if (!name) { showToast('⚠️ 请输入菜名'); return; }
+            if (isNaN(price) || price <= 0) { showToast('⚠️ 请输入有效价格'); return; }
+
+            const specs = tempSpecs.filter(s => s.label.trim() && s.price > 0);
+
+            if (editId) {
+                const idx = menuData.findIndex(d => d.id === parseInt(editId));
+                if (idx !== -1) {
+                    menuData[idx] = { ...menuData[idx], name, category, desc, price, badge, image, specs };
+                    showToast('✅ 已更新');
+                }
+            } else {
+                menuData.push({ id: nextId++, name, category, desc, price, badge, image, specs });
+                showToast('✅ 已添加');
+            }
+            saveMenuLocal();
+            await syncMenuToSupabase();
+            renderAdminList();
+            renderMenu();
+            document.getElementById('editId').value = '';
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPrice').value = '';
+            document.getElementById('inputBadge').value = '';
+            document.getElementById('inputImage').value = '';
+            tempSpecs = [];
+            renderSpecs();
+            document.getElementById('adminFormTitle').textContent = '➕ 添加菜品';
+        }
+
+        async function deleteAdminItem(id) {
+            if (!confirm('确定删除该菜品吗？')) return;
+            menuData = menuData.filter(d => d.id !== id);
+            saveMenuLocal();
+            await syncMenuToSupabase();
+            renderAdminList();
+            renderMenu();
+            showToast('已删除');
+        }
+
+        function renderAdminList() {
+            const container = document.getElementById('adminItemList');
+            if (menuData.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无菜品</div>';
+                return;
+            }
+            let html = '';
+            menuData.forEach(item => {
+                html += `
+                    <div class="admin-list-item">
+                        <div class="info">
+                            <span class="name">${item.name}</span>
+                            <span style="color:#a08474;font-size:13px;margin-left:6px;">${item.category}</span>
+                            <span class="price">¥${item.price}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="edit" data-action="edit" data-id="${item.id}">编辑</button>
+                            <button class="del" data-action="del" data-id="${item.id}">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function showAdmin() {
+            document.getElementById('adminPage').style.display = 'block';
+            document.querySelectorAll('.app > *:not(#adminPage)').forEach(el => el.style.display = 'none');
+            renderAdminList();
+        }
+
+        function hideAdmin() {
+            document.getElementById('adminPage').style.display = 'none';
+            document.querySelectorAll('.app > *:not(#adminPage)').forEach(el => el.style.display = '');
+            renderMenu();
+        }
+
+        // ============================================================
+        // 事件绑定
+        // ============================================================
+
+        document.getElementById('modeDineIn').addEventListener('click', function() {
+            currentMode = 'dinein';
+            document.getElementById('modeDineIn').classList.add('active');
+            document.getElementById('modeDineIn').classList.remove('pack-active');
+            document.getElementById('modePack').classList.remove('active', 'pack-active');
+            document.getElementById('tableSelector').style.display = 'flex';
+            renderMenu();
+        });
+        document.getElementById('modePack').addEventListener('click', function() {
+            currentMode = 'pack';
+            document.getElementById('modePack').classList.add('active', 'pack-active');
+            document.getElementById('modeDineIn').classList.remove('active');
+            document.getElementById('tableSelector').style.display = 'none';
+            renderMenu();
+        });
+
+        document.querySelectorAll('.table-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.table-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                tableNumber = this.dataset.table;
+                renderMenu();
+            });
+        });
+
+        document.getElementById('categoryTabs').addEventListener('click', function(e) {
+            const tab = e.target.closest('.category-tab');
+            if (!tab) return;
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCategory = tab.dataset.cat;
+            renderMenu();
+        });
+
+        document.getElementById('menuList').addEventListener('click', function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const id = parseInt(btn.dataset.id);
+            const item = menuData.find(d => d.id === id);
+            if (!item) return;
+            if (action === 'incr') {
+                if (item.specs && item.specs.length > 0) {
+                    openSpecModal(item);
+                } else {
+                    addToCart(item, 0);
+                }
+            } else if (action === 'decr') {
+                removeFromCart(id);
+            }
+        });
+
+        modalCancel.addEventListener('click', closeModal);
+        modalConfirm.addEventListener('click', confirmModal);
+        specModal.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        submitBtn.addEventListener('click', submitOrder);
+        expandCheckoutBtn.addEventListener('click', function() {
+            closeExpandCart();
+            submitOrder();
+        });
+
+        cartInner.addEventListener('click', function(e) {
+            if (e.target.closest('.checkout-btn')) return;
+            openExpandCart();
+        });
+        cartExpandOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeExpandCart();
+        });
+        cartCloseBtn.addEventListener('click', closeExpandCart);
+
+        clearCartBtn.addEventListener('click', function() {
+            if (cart.length === 0) return;
+            if (!confirm('确定清空购物车吗？')) return;
+            cart = [];
+            renderMenu();
+            closeExpandCart();
+            showToast('已清空购物车');
+        });
+
+        document.getElementById('adminEntryBtn').addEventListener('click', showAdmin);
+        document.getElementById('adminBackBtn').addEventListener('click', hideAdmin);
+        document.getElementById('addSpecBtn').addEventListener('click', function() {
+            tempSpecs.push({ label: '新规格', price: 0 });
+            renderSpecs();
+        });
+        document.getElementById('saveBtn').addEventListener('click', saveAdminForm);
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('editId').value = '';
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputDesc').value = '';
+            document.getElementById('inputPrice').value = '';
+            document.getElementById('inputBadge').value = '';
+            document.getElementById('inputImage').value = '';
+            tempSpecs = [];
+            renderSpecs();
+            document.getElementById('adminFormTitle').textContent = '➕ 添加菜品';
+            showToast('已取消');
+        });
+        document.getElementById('adminItemList').addEventListener('click', function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const id = parseInt(btn.dataset.id);
+            if (action === 'edit') {
+                const item = menuData.find(d => d.id === id);
+                if (item) openAdminForm(item);
+            } else if (action === 'del') {
+                deleteAdminItem(id);
+            }
+        });
+
+        // ============================================================
+        // 初始化
+        // ============================================================
+        loadMenuFromSupabase().then(success => {
+            if (!success) {
+                if (!loadMenuLocal()) {
+                    menuData = JSON.parse(JSON.stringify(DEFAULT_MENU));
+                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+                    saveMenuLocal();
+                    syncMenuToSupabase();
+                }
+                renderMenu();
+            }
+        });
+
+        fetchOrders();
+        setInterval(fetchOrders, 10000);
+
+        showToast('🏪 收银台已打开 (7桌)');
+        console.log('🥟 收银台 · 老张家水饺 (7桌)');
+        console.log('🔐 管理员密码: 8888');
+        console.log('💡 点击「已收款」标记付款，如果失败查看控制台错误');
+    </script>
+
+</body>
+</html>
