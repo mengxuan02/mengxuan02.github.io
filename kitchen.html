@@ -108,7 +108,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .order-card.done {
-            opacity: 0.35;
+            opacity: 0.5;
             border-left-color: #27ae60;
             order: 999;
         }
@@ -401,9 +401,7 @@
                         'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
                     }
                 });
-                if (!response.ok) {
-                    throw new Error('获取订单失败');
-                }
+                if (!response.ok) throw new Error('获取订单失败');
                 const newOrders = await response.json();
 
                 if (newOrders.length > lastOrderCount && lastOrderCount > 0) {
@@ -430,6 +428,7 @@
         // ============================================================
         function renderOrders() {
             const container = document.getElementById('orderContainer');
+            // 待制作：status 不是 "已完成"
             const pending = orders.filter(o => o.status !== '已完成');
             const done = orders.filter(o => o.status === '已完成');
 
@@ -458,6 +457,7 @@
             }
 
             let html = '';
+            // 先显示待制作，再显示已完成
             const sorted = [...pending, ...done];
             sorted.forEach((order, index) => {
                 const isDone = order.status === '已完成';
@@ -478,7 +478,7 @@
                         <div class="card-footer">
                             <span class="price">¥${order.total || 0}</span>
                             <div class="btn-group">
-                                ${!isDone ? `<button class="btn-done" onclick="markDone('${order.id}')">✅ 出餐</button>` : `<span style="color:#27ae60;font-size:13px;">✅ 已完成</span>`}
+                                ${!isDone ? `<button class="btn-done" onclick="markDone('${order.id}')">✅ 出餐</button>` : `<span style="color:#27ae60;font-size:13px;">✅ 已出餐</span>`}
                                 <button class="btn-delete" onclick="deleteOrder('${order.id}')">✕</button>
                             </div>
                         </div>
@@ -489,7 +489,7 @@
         }
 
         // ============================================================
-        // 出餐完成
+        // ⭐ 修复：出餐完成（只改 status，不改 paid）
         // ============================================================
         async function markDone(orderId) {
             if (!confirm('确认这份订单已出餐？')) return;
@@ -503,9 +503,7 @@
                     },
                     body: JSON.stringify({ status: '已完成' })
                 });
-                if (!response.ok) {
-                    throw new Error('更新订单失败');
-                }
+                if (!response.ok) throw new Error('更新订单失败');
                 playBeep();
                 showToast('✅ 已出餐');
                 fetchOrders();
@@ -527,9 +525,7 @@
                         'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
                     }
                 });
-                if (!response.ok) {
-                    throw new Error('删除订单失败');
-                }
+                if (!response.ok) throw new Error('删除订单失败');
                 showToast('已删除');
                 fetchOrders();
             } catch (error) {
@@ -565,8 +561,8 @@
         // 初始化
         // ============================================================
         fetchOrders();
-        console.log('🍳 后厨看板已启动 (Supabase版)');
-        console.log('🔑 Supabase URL:', SUPABASE_URL);
+        console.log('🍳 后厨看板已启动');
+        console.log('✅ 出餐完成只改状态，不影响收款标记');
     </script>
 
 </body>
