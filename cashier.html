@@ -79,20 +79,6 @@
         .cart-expand-panel .panel-footer .actions .checkout-btn2{background:#c0392b;color:#fff}
         .cart-empty-state{text-align:center;padding:24px 0;color:#b8a090}
         .cart-empty-state .icon{font-size:36px;margin-bottom:6px}
-        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(74,51,40,.5);justify-content:center;align-items:center;z-index:1100;padding:24px}
-        .modal-overlay.show{display:flex}
-        .modal-box{background:#fdfaf7;border-radius:24px;max-width:360px;width:100%;padding:24px 20px 18px;box-shadow:0 20px 60px rgba(74,51,40,.3);animation:modalIn .2s ease}
-        @keyframes modalIn{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
-        .modal-title{font-size:19px;font-weight:700;color:#4a3328}
-        .modal-sub{font-size:13px;color:#a08474;margin-bottom:14px}
-        .modal-option{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid #f0e4d8;border-radius:12px;margin-bottom:6px;cursor:pointer}
-        .modal-option .opt-label{font-weight:500;color:#4a3328}
-        .modal-option .opt-price{font-weight:600;color:#c0392b}
-        .modal-option.active{border-color:#c0392b;background:#fdf2ed}
-        .modal-footer{display:flex;gap:8px;margin-top:14px}
-        .modal-footer button{flex:1;padding:10px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
-        .modal-btn-cancel{background:#f5efe8;color:#8a7a6a}
-        .modal-btn-confirm{background:#c0392b;color:#fff}
         .toast{position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#4a3328;color:#fdfaf7;padding:8px 22px;border-radius:60px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(74,51,40,.2);opacity:0;transition:opacity .25s;pointer-events:none;z-index:9999;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
         .toast.show{opacity:1}
         .empty-state{text-align:center;padding:30px 20px;color:#b8a090}
@@ -115,10 +101,12 @@
         .status-badge.done{background:#e8f5e9;color:#27ae60}
         .status-badge.paid{background:#e8f5e9;color:#27ae60}
         .status-badge.unpaid{background:#ffebee;color:#c0392b}
+        .status-badge.done-unpaid{background:#fff3e0;color:#e67e22}
         .order-card .order-footer .actions{display:flex;gap:4px}
         .order-card .order-footer .actions button{border:none;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer}
         .btn-pay{background:#27ae60;color:#fff}
         .btn-unpay{background:#f5efe8;color:#4a3328}
+        .btn-repay{background:#e67e22;color:#fff}
         #adminPage{display:none;padding:16px}
         #adminPage .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
         #adminPage .admin-header h2{color:#4a3328;font-size:20px}
@@ -140,6 +128,34 @@
         .spec-row input[type=number]{max-width:70px}
         .spec-row button{border:none;background:#f0e4d8;color:#a83226;padding:4px 10px;border-radius:6px;font-size:14px;cursor:pointer}
         @media(max-width:420px){body{padding:8px}.app{border-radius:20px}.menu-item .food-img{width:50px;height:50px;font-size:24px}.cart-expand-panel{padding:14px 14px 18px}.table-btn{font-size:12px;padding:3px 10px}.order-tab{font-size:11px;padding:3px 10px}}
+
+        /* 什锦弹窗 */
+        .mix-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(74,51,40,.5);justify-content:center;align-items:center;z-index:1200;padding:20px}
+        .mix-modal-overlay.show{display:flex}
+        .mix-modal-box{background:#fdfaf7;border-radius:24px;max-width:400px;width:100%;padding:24px 20px 20px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(74,51,40,.3)}
+        .mix-modal-box .mix-title{font-size:20px;font-weight:700;color:#4a3328;margin-bottom:4px}
+        .mix-modal-box .mix-sub{font-size:14px;color:#a08474;margin-bottom:14px}
+        .mix-modal-box .mix-flavors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+        .mix-modal-box .mix-flavor-item{padding:8px 12px;border:2px solid #f0e4d8;border-radius:12px;font-size:14px;font-weight:500;color:#4a3328;cursor:pointer;text-align:center;transition:.1s;background:#fff;user-select:none}
+        .mix-modal-box .mix-flavor-item:active{transform:scale(.95)}
+        .mix-modal-box .mix-flavor-item.selected{border-color:#c0392b;background:#fdf2ed;color:#c0392b}
+        .mix-modal-box .mix-flavor-item .check{display:none}
+        .mix-modal-box .mix-flavor-item.selected .check{display:inline}
+        .mix-modal-box .mix-selected-info{font-size:13px;color:#4a3328;background:#f5efe8;padding:8px 12px;border-radius:10px;margin-bottom:14px;min-height:36px}
+        .mix-modal-box .mix-selected-info .empty{color:#b8a090}
+        .mix-modal-box .mix-size-select{display:flex;gap:8px;margin-bottom:16px}
+        .mix-modal-box .mix-size-btn{flex:1;padding:8px;border:2px solid #f0e4d8;border-radius:12px;background:#fff;font-size:14px;font-weight:500;color:#4a3328;cursor:pointer;text-align:center;transition:.1s}
+        .mix-modal-box .mix-size-btn:active{transform:scale(.95)}
+        .mix-modal-box .mix-size-btn.active{border-color:#c0392b;background:#fdf2ed;color:#c0392b}
+        .mix-modal-box .mix-size-btn .price{font-weight:700;color:#c0392b}
+        .mix-modal-box .mix-footer{display:flex;gap:10px}
+        .mix-modal-box .mix-footer button{flex:1;padding:12px;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;transition:.1s}
+        .mix-modal-box .mix-footer button:active{transform:scale(.96)}
+        .mix-modal-box .mix-footer .btn-cancel{background:#f5efe8;color:#8a7a6a}
+        .mix-modal-box .mix-footer .btn-confirm{background:#c0392b;color:#fff}
+        .mix-modal-box .mix-footer .btn-confirm:disabled{background:#ccc;cursor:not-allowed}
+        .mix-modal-box .mix-error{color:#c0392b;font-size:13px;margin-bottom:10px;display:none}
+        .mix-modal-box .mix-error.show{display:block}
     </style>
 </head>
 <body>
@@ -177,6 +193,7 @@
             <button class="category-tab" data-cat="汤面">🍜 汤面</button>
             <button class="category-tab" data-cat="小菜">🥗 小菜</button>
             <button class="category-tab" data-cat="馄饨">🍲 馄饨</button>
+            <button class="category-tab" data-cat="饮料">🥤 饮料</button>
         </div>
 
         <div class="menu-list" id="menuList"></div>
@@ -232,14 +249,20 @@
             </div>
         </div>
 
-        <div class="modal-overlay" id="specModal">
-            <div class="modal-box">
-                <div class="modal-title" id="modalTitle">选择规格</div>
-                <div class="modal-sub" id="modalSub">请选择份量</div>
-                <div id="modalOptions"></div>
-                <div class="modal-footer">
-                    <button class="modal-btn-cancel" id="modalCancel">取消</button>
-                    <button class="modal-btn-confirm" id="modalConfirm">确认添加</button>
+        <!-- 什锦弹窗 -->
+        <div class="mix-modal-overlay" id="mixModal">
+            <div class="mix-modal-box">
+                <div class="mix-title">🥟 什锦水饺</div>
+                <div class="mix-sub">选择口味拼盘（可多选）</div>
+                <div class="mix-flavors" id="mixFlavors"></div>
+                <div class="mix-selected-info" id="mixSelectedInfo">
+                    <span class="empty">👆 请选择至少一种口味</span>
+                </div>
+                <div class="mix-error" id="mixError">⚠️ 请至少选择一种口味</div>
+                <div class="mix-size-select" id="mixSizeSelect"></div>
+                <div class="mix-footer">
+                    <button class="btn-cancel" id="mixCancel">取消</button>
+                    <button class="btn-confirm" id="mixConfirm" disabled>确认添加</button>
                 </div>
             </div>
         </div>
@@ -262,6 +285,7 @@
                     <option value="汤面">🍜 汤面</option>
                     <option value="小菜">🥗 小菜</option>
                     <option value="馄饨">🍲 馄饨</option>
+                    <option value="饮料">🥤 饮料</option>
                 </select>
                 <label>描述</label>
                 <input type="text" id="inputDesc" placeholder="如：经典素馅 · 16只">
@@ -293,6 +317,25 @@
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_t8ieA51rEM-bdCqS-9pTTA_qi_BepvN';
 
         // ============================================================
+        // 口味列表
+        // ============================================================
+        const FLAVORS = [
+            { id: 'leek_pork', label: '韭菜猪肉' },
+            { id: 'celery_pork', label: '芹菜猪肉' },
+            { id: 'cabbage_pork', label: '白菜猪肉' },
+            { id: 'onion_pork', label: '大葱猪肉' },
+            { id: 'mushroom_pork', label: '香菇猪肉' },
+            { id: 'shepherd_pork', label: '荠菜猪肉' },
+            { id: 'pure_pork', label: '鲜肉' }
+        ];
+
+        const MIX_SIZES = [
+            { label: '小份 15只', price: 10 },
+            { label: '中份 23只', price: 15 },
+            { label: '大份 30只', price: 20 }
+        ];
+
+        // ============================================================
         // 菜单数据
         // ============================================================
         const STORAGE_KEY = 'laozhang_menu_data_v4';
@@ -316,12 +359,47 @@
             { id: 8, name: '葱油拌面', category: '汤面', desc: '葱香四溢', price: 8, badge: '', image: '', specs: [] },
             { id: 9, name: '凉拌黄瓜', category: '小菜', desc: '清爽开胃', price: 10, badge: '', image: '', specs: [] },
             { id: 10, name: '荷包蛋', category: '小菜', desc: '煎蛋', price: 2, badge: '', image: '', specs: [] },
+            { id: 11, name: '白菜猪肉水饺', category: '水饺', desc: '白菜+猪肉 · 15只', price: 10, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { id: 12, name: '大葱猪肉水饺', category: '水饺', desc: '大葱+猪肉 · 15只', price: 10, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { id: 13, name: '香菇猪肉水饺', category: '水饺', desc: '香菇+猪肉 · 15只', price: 12, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 12 }, { label: '中份 20只', price: 16 }, { label: '大份 25只',
+                    price: 20 }] },
+            { id: 14, name: '荠菜猪肉水饺', category: '水饺', desc: '荠菜+猪肉 · 15只', price: 12, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 12 }, { label: '中份 20只', price: 16 }, { label: '大份 25只',
+                    price: 20 }] },
+            { id: 15, name: '鲜肉水饺', category: '水饺', desc: '纯猪肉馅 · 15只', price: 10, badge: '', image: '',
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { 
+                id: 16, 
+                name: '什锦水饺', 
+                category: '水饺', 
+                desc: '自选口味拼盘 · 可混搭', 
+                price: 10, 
+                badge: '混搭', 
+                image: '',
+                isMix: true,
+                specs: MIX_SIZES
+            },
+            { id: 17, name: '可乐', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
+            { id: 18, name: '雪碧', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
+            { id: 19, name: '冰红茶', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
+            { id: 20, name: '矿泉水', category: '饮料', desc: '550ml', price: 2, badge: '', image: '', specs: [] },
         ];
 
         let menuData = [];
-        let nextId = 1;
+        let nextId = 21;
         let orders = [];
         let orderFilter = 'all';
+
+        // 什锦弹窗状态
+        let mixSelectedFlavors = [];
+        let mixSelectedSize = 0;
+        let mixCallback = null;
 
         function loadMenuLocal() {
             const stored = localStorage.getItem(STORAGE_KEY);
@@ -399,7 +477,7 @@
         }
 
         // ============================================================
-        // 订单操作（修复版）
+        // 订单操作
         // ============================================================
         async function fetchOrders() {
             try {
@@ -417,12 +495,9 @@
             }
         }
 
-        // ⚠️ 重点：修复后的 markPaid 函数
         async function markPaid(orderId) {
             if (!confirm('确认该订单已收款？')) return;
             try {
-                console.log('📤 正在标记付款, 订单ID:', orderId);
-                
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
                     method: 'PATCH',
                     headers: {
@@ -432,19 +507,11 @@
                     },
                     body: JSON.stringify({ paid: true })
                 });
-                
-                const text = await response.text();
-                console.log('📥 响应状态:', response.status);
-                console.log('📥 响应内容:', text);
-                
-                if (!response.ok) {
-                    throw new Error('服务器返回: ' + text);
-                }
+                if (!response.ok) throw new Error('更新失败');
                 showToast('✅ 已标记为已付款');
-                await fetchOrders(); // 等待刷新完成
+                await fetchOrders();
             } catch (e) {
                 showToast('❌ 操作失败: ' + e.message);
-                console.error('❌ 标记付款错误:', e);
             }
         }
 
@@ -466,6 +533,9 @@
             }
         }
 
+        // ============================================================
+        // ⭐ 修复：renderOrders 正确显示状态
+        // ============================================================
         function renderOrders() {
             const container = document.getElementById('orderList');
             const all = orders;
@@ -491,12 +561,16 @@
                 const isDone = order.status === '已完成';
                 const time = order.create_time ? new Date(order.create_time).toLocaleTimeString('zh-CN', { hour: '2-digit',
                     minute: '2-digit' }) : '';
+                
                 let statusText = '';
                 let statusClass = '';
-                if (isDone) {
+                if (isDone && !isPaid) {
+                    statusText = '⚠️ 已出餐未付款';
+                    statusClass = 'done-unpaid';
+                } else if (isDone && isPaid) {
                     statusText = '✅ 已完成';
                     statusClass = 'done';
-                } else if (isPaid) {
+                } else if (!isDone && isPaid) {
                     statusText = '💰 已付款';
                     statusClass = 'paid';
                 } else {
@@ -515,9 +589,9 @@
                             <span class="total">¥${order.total || 0}</span>
                             <span class="status-badge ${statusClass}">${statusText}</span>
                             <div class="actions">
-                                ${!isDone ? `
-                                    ${!isPaid ? `<button class="btn-pay" onclick="markPaid('${order.id}')">💰 已收款</button>` : `<button class="btn-unpay" onclick="markUnpaid('${order.id}')">↩️ 取消</button>`}
-                                ` : ''}
+                                ${!isDone && !isPaid ? `<button class="btn-pay" onclick="markPaid('${order.id}')">💰 已收款</button>` : ''}
+                                ${!isDone && isPaid ? `<button class="btn-unpay" onclick="markUnpaid('${order.id}')">↩️ 取消</button>` : ''}
+                                ${isDone && !isPaid ? `<button class="btn-repay" onclick="markPaid('${order.id}')">💰 补收款</button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -525,6 +599,102 @@
             });
             container.innerHTML = html;
         }
+
+        // ============================================================
+        // 什锦弹窗
+        // ============================================================
+        function openMixModal(item, callback) {
+            mixSelectedFlavors = [];
+            mixSelectedSize = 0;
+            mixCallback = callback;
+
+            document.getElementById('mixModal').classList.add('show');
+            document.getElementById('mixError').classList.remove('show');
+            document.getElementById('mixConfirm').disabled = true;
+
+            let flavorsHtml = '';
+            FLAVORS.forEach(f => {
+                flavorsHtml += `
+                    <div class="mix-flavor-item" data-id="${f.id}">
+                        ${f.label} <span class="check">✓</span>
+                    </div>
+                `;
+            });
+            document.getElementById('mixFlavors').innerHTML = flavorsHtml;
+
+            let sizeHtml = '';
+            MIX_SIZES.forEach((s, idx) => {
+                sizeHtml += `
+                    <div class="mix-size-btn ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                        ${s.label}<br><span class="price">¥${s.price}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('mixSizeSelect').innerHTML = sizeHtml;
+            mixSelectedSize = 0;
+
+            updateMixSelectedInfo();
+
+            document.querySelectorAll('.mix-flavor-item').forEach(el => {
+                el.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    updateMixSelectedInfo();
+                });
+            });
+
+            document.querySelectorAll('.mix-size-btn').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('.mix-size-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    mixSelectedSize = parseInt(this.dataset.index);
+                    updateMixSelectedInfo();
+                });
+            });
+        }
+
+        function updateMixSelectedInfo() {
+            const selected = document.querySelectorAll('.mix-flavor-item.selected');
+            const names = Array.from(selected).map(el => el.textContent.replace('✓', '').trim());
+            const infoEl = document.getElementById('mixSelectedInfo');
+            const confirmBtn = document.getElementById('mixConfirm');
+
+            if (names.length === 0) {
+                infoEl.innerHTML = '<span class="empty">👆 请选择至少一种口味</span>';
+                confirmBtn.disabled = true;
+            } else {
+                infoEl.textContent = '✅ 已选：' + names.join('、');
+                confirmBtn.disabled = false;
+            }
+        }
+
+        function closeMixModal() {
+            document.getElementById('mixModal').classList.remove('show');
+        }
+
+        function confirmMix() {
+            const selected = document.querySelectorAll('.mix-flavor-item.selected');
+            if (selected.length === 0) {
+                document.getElementById('mixError').classList.add('show');
+                return;
+            }
+            document.getElementById('mixError').classList.remove('show');
+
+            const names = Array.from(selected).map(el => el.textContent.replace('✓', '').trim());
+            const size = MIX_SIZES[mixSelectedSize];
+            const label = size.label + '（' + names.join('、') + '）';
+            const price = size.price;
+
+            if (mixCallback) {
+                mixCallback(label, price);
+            }
+            closeMixModal();
+        }
+
+        document.getElementById('mixCancel').addEventListener('click', closeMixModal);
+        document.getElementById('mixConfirm').addEventListener('click', confirmMix);
+        document.getElementById('mixModal').addEventListener('click', function(e) {
+            if (e.target === this) closeMixModal();
+        });
 
         // ============================================================
         // 状态
@@ -536,9 +706,6 @@
         let tempSpecs = [];
         let isSubmitting = false;
 
-        // ============================================================
-        // DOM
-        // ============================================================
         const menuList = document.getElementById('menuList');
         const cartTotal = document.getElementById('cartTotal');
         const cartCount = document.getElementById('cartCount');
@@ -556,9 +723,6 @@
 
         let toastTimer = null;
 
-        // ============================================================
-        // 工具
-        // ============================================================
         function showToast(msg) {
             toastEl.textContent = msg;
             toastEl.classList.add('show');
@@ -609,20 +773,24 @@
             let html = '';
             filtered.forEach(item => {
                 const hasSpecs = item.specs && item.specs.length > 0;
+                const isMix = item.isMix === true;
                 const displayPrice = hasSpecs ? item.specs[0].price : item.price;
                 const badgeHtml = item.badge ? `<span class="badge">${item.badge}</span>` : '';
                 let totalQty = 0;
-                if (hasSpecs) {
+                if (hasSpecs && !isMix) {
+                    item.specs.forEach((_, idx) => { totalQty += getCartQty(item.id, idx); });
+                } else if (isMix) {
                     item.specs.forEach((_, idx) => { totalQty += getCartQty(item.id, idx); });
                 } else {
                     totalQty = getCartQty(item.id, 0);
                 }
                 const imgHtml = item.image ? `<img src="${item.image}">` : '🍽️';
+                const mixTag = isMix ? ' 🎯拼盘' : '';
                 html += `
-                    <div class="menu-item" data-id="${item.id}">
+                    <div class="menu-item" data-id="${item.id}" data-ismix="${isMix}">
                         <div class="food-img">${imgHtml}</div>
                         <div class="food-info">
-                            <div class="food-name">${item.name} ${badgeHtml}</div>
+                            <div class="food-name">${item.name} ${badgeHtml}${mixTag}</div>
                             <div class="food-desc">${item.desc || ''}</div>
                             <div class="food-price">¥${displayPrice} ${hasSpecs ? '<small>起</small>' : ''}</div>
                         </div>
@@ -650,9 +818,6 @@
             renderExpandCart();
         }
 
-        // ============================================================
-        // 购物车展开
-        // ============================================================
         function renderExpandCart() {
             if (cart.length === 0) {
                 cartExpandBody.innerHTML =
@@ -711,12 +876,12 @@
         // ============================================================
         // 购物车操作
         // ============================================================
-        function addToCart(item, specIndex) {
+        function addToCart(item, specIndex, customLabel) {
             const hasSpecs = item.specs && item.specs.length > 0;
             const spec = hasSpecs ? item.specs[specIndex] : null;
             const price = spec ? spec.price : item.price;
-            const label = spec ? spec.label : '';
-            const key = item.id + '-' + specIndex;
+            const label = customLabel || (spec ? spec.label : '');
+            const key = item.id + '-' + specIndex + (customLabel ? '-' + customLabel : '');
             const existing = cart.find(c => c.key === key);
             if (existing) {
                 existing.qty += 1;
@@ -771,7 +936,7 @@
                     mode: mode,
                     status: '待制作',
                     paid: false,
-                    create_time: new Date().toISOString()
+                    create_time: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString()
                 };
 
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
@@ -802,53 +967,41 @@
         }
 
         // ============================================================
-        // 规格弹窗
+        // 菜单点击
         // ============================================================
-        let selectedSpecItem = null;
-        let selectedSpecIndex = 0;
-        const specModal = document.getElementById('specModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSub = document.getElementById('modalSub');
-        const modalOptions = document.getElementById('modalOptions');
-        const modalCancel = document.getElementById('modalCancel');
-        const modalConfirm = document.getElementById('modalConfirm');
+        document.getElementById('menuList').addEventListener('click', function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const id = parseInt(btn.dataset.id);
+            const item = menuData.find(d => d.id === id);
+            if (!item) return;
 
-        function openSpecModal(item) {
-            selectedSpecItem = item;
-            selectedSpecIndex = 0;
-            modalTitle.textContent = item.name;
-            modalSub.textContent = '请选择份量';
-            let html = '';
-            item.specs.forEach((spec, idx) => {
-                const active = idx === 0 ? ' active' : '';
-                html += `
-                    <div class="modal-option${active}" data-index="${idx}">
-                        <span class="opt-label">${spec.label}</span>
-                        <span class="opt-price">¥${spec.price}</span>
-                    </div>
-                `;
-            });
-            modalOptions.innerHTML = html;
-            modalOptions.querySelectorAll('.modal-option').forEach(el => {
-                el.addEventListener('click', function() {
-                    modalOptions.querySelectorAll('.modal-option').forEach(o => o.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedSpecIndex = parseInt(this.dataset.index);
-                });
-            });
-            specModal.classList.add('show');
-        }
+            if (action === 'incr') {
+                if (item.isMix === true) {
+                    openMixModal(item, function(label, price) {
+                        const key = item.id + '-mix-' + label;
+                        const existing = cart.find(c => c.key === key);
+                        if (existing) {
+                            existing.qty += 1;
+                        } else {
+                            cart.push({ key, id: item.id, name: item.name, label, price, qty: 1 });
+                        }
+                        renderMenu();
+                        showToast(`+1 · ${item.name} (${label})`);
+                    });
+                    return;
+                }
 
-        function closeModal() {
-            specModal.classList.remove('show');
-            selectedSpecItem = null;
-        }
-
-        function confirmModal() {
-            if (!selectedSpecItem) return;
-            addToCart(selectedSpecItem, selectedSpecIndex);
-            closeModal();
-        }
+                if (item.specs && item.specs.length > 0) {
+                    addToCart(item, 0);
+                } else {
+                    addToCart(item, 0);
+                }
+            } else if (action === 'decr') {
+                removeFromCart(id);
+            }
+        });
 
         // ============================================================
         // 订单筛选
@@ -999,10 +1152,11 @@
             }
             let html = '';
             menuData.forEach(item => {
+                const isMix = item.isMix ? ' 🎯拼盘' : '';
                 html += `
                     <div class="admin-list-item">
                         <div class="info">
-                            <span class="name">${item.name}</span>
+                            <span class="name">${item.name}${isMix}</span>
                             <span style="color:#a08474;font-size:13px;margin-left:6px;">${item.category}</span>
                             <span class="price">¥${item.price}</span>
                         </div>
@@ -1064,30 +1218,6 @@
             tab.classList.add('active');
             currentCategory = tab.dataset.cat;
             renderMenu();
-        });
-
-        document.getElementById('menuList').addEventListener('click', function(e) {
-            const btn = e.target.closest('button');
-            if (!btn) return;
-            const action = btn.dataset.action;
-            const id = parseInt(btn.dataset.id);
-            const item = menuData.find(d => d.id === id);
-            if (!item) return;
-            if (action === 'incr') {
-                if (item.specs && item.specs.length > 0) {
-                    openSpecModal(item);
-                } else {
-                    addToCart(item, 0);
-                }
-            } else if (action === 'decr') {
-                removeFromCart(id);
-            }
-        });
-
-        modalCancel.addEventListener('click', closeModal);
-        modalConfirm.addEventListener('click', confirmModal);
-        specModal.addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
         });
 
         submitBtn.addEventListener('click', submitOrder);
@@ -1164,10 +1294,11 @@
         fetchOrders();
         setInterval(fetchOrders, 10000);
 
-        showToast('🏪 收银台已打开 (7桌)');
-        console.log('🥟 收银台 · 老张家水饺 (7桌)');
+        showToast('🏪 收银台已打开');
+        console.log('🥟 收银台已启动');
+        console.log('✅ 出餐和收款已分离，互不影响');
+        console.log('⚠️ 「已出餐未付款」会显示橙色警告');
         console.log('🔐 管理员密码: 8888');
-        console.log('💡 点击「已收款」标记付款，如果失败查看控制台错误');
     </script>
 
 </body>
