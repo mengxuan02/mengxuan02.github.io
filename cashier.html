@@ -129,7 +129,6 @@
         .spec-row button{border:none;background:#f0e4d8;color:#a83226;padding:4px 10px;border-radius:6px;font-size:14px;cursor:pointer}
         @media(max-width:420px){body{padding:8px}.app{border-radius:20px}.menu-item .food-img{width:50px;height:50px;font-size:24px}.cart-expand-panel{padding:14px 14px 18px}.table-btn{font-size:12px;padding:3px 10px}.order-tab{font-size:11px;padding:3px 10px}}
 
-        /* 什锦弹窗 */
         .mix-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(74,51,40,.5);justify-content:center;align-items:center;z-index:1200;padding:20px}
         .mix-modal-overlay.show{display:flex}
         .mix-modal-box{background:#fdfaf7;border-radius:24px;max-width:400px;width:100%;padding:24px 20px 20px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(74,51,40,.3)}
@@ -249,7 +248,6 @@
             </div>
         </div>
 
-        <!-- 什锦弹窗 -->
         <div class="mix-modal-overlay" id="mixModal">
             <div class="mix-modal-box">
                 <div class="mix-title">🥟 什锦水饺</div>
@@ -336,9 +334,8 @@
         ];
 
         // ============================================================
-        // 菜单数据
+        // 菜单数据 - 直接内嵌完整数据
         // ============================================================
-        const STORAGE_KEY = 'laozhang_menu_data_v4';
         const DEFAULT_MENU = [
             { id: 1, name: '韭菜鸡蛋水饺', category: '水饺', desc: '经典素馅 · 16只', price: 12, badge: '招牌', image: '',
                 specs: [{ label: '小份 16只', price: 8 }, { label: '中份 24只', price: 12 }, { label: '大份 30只',
@@ -349,42 +346,35 @@
             { id: 3, name: '韭菜猪肉水饺', category: '水饺', desc: '韭菜+猪肉 · 15只', price: 10, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
                     price: 20 }] },
-            { id: 4, name: '大馄饨', category: '馄饨', desc: '皮薄馅大 · 12只', price: 12, badge: '', image: '',
-                specs: [{ label: '12只', price: 12 }, { label: '15只', price: 15 }, { label: '20只', price: 20 }] },
-            { id: 5, name: '鸡蛋肉丝炒饭', category: '炒饭', desc: '香喷喷的家常味', price: 12, badge: '人气', image: '',
-            specs: [] },
-            { id: 6, name: '鸡蛋炒饭', category: '炒饭', desc: '经典原味', price: 8, badge: '', image: '', specs: [] },
-            { id: 7, name: '鸡蛋肉丝炒面', category: '炒面', desc: '劲道面条+肉丝', price: 12, badge: '', image: '',
-            specs: [] },
-            { id: 8, name: '葱油拌面', category: '汤面', desc: '葱香四溢', price: 8, badge: '', image: '', specs: [] },
-            { id: 9, name: '凉拌黄瓜', category: '小菜', desc: '清爽开胃', price: 10, badge: '', image: '', specs: [] },
-            { id: 10, name: '荷包蛋', category: '小菜', desc: '煎蛋', price: 2, badge: '', image: '', specs: [] },
-            { id: 11, name: '白菜猪肉水饺', category: '水饺', desc: '白菜+猪肉 · 15只', price: 10, badge: '', image: '',
+            { id: 4, name: '白菜猪肉水饺', category: '水饺', desc: '白菜+猪肉 · 15只', price: 10, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
                     price: 20 }] },
-            { id: 12, name: '大葱猪肉水饺', category: '水饺', desc: '大葱+猪肉 · 15只', price: 10, badge: '', image: '',
+            { id: 5, name: '大葱猪肉水饺', category: '水饺', desc: '大葱+猪肉 · 15只', price: 10, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
                     price: 20 }] },
-            { id: 13, name: '香菇猪肉水饺', category: '水饺', desc: '香菇+猪肉 · 15只', price: 12, badge: '', image: '',
+            { id: 6, name: '香菇猪肉水饺', category: '水饺', desc: '香菇+猪肉 · 15只', price: 12, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 12 }, { label: '中份 20只', price: 16 }, { label: '大份 25只',
                     price: 20 }] },
-            { id: 14, name: '荠菜猪肉水饺', category: '水饺', desc: '荠菜+猪肉 · 15只', price: 12, badge: '', image: '',
+            { id: 7, name: '荠菜猪肉水饺', category: '水饺', desc: '荠菜+猪肉 · 15只', price: 12, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 12 }, { label: '中份 20只', price: 16 }, { label: '大份 25只',
                     price: 20 }] },
-            { id: 15, name: '鲜肉水饺', category: '水饺', desc: '纯猪肉馅 · 15只', price: 10, badge: '', image: '',
+            { id: 8, name: '鲜肉水饺', category: '水饺', desc: '纯猪肉馅 · 15只', price: 10, badge: '', image: '',
                 specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
                     price: 20 }] },
-            { 
-                id: 16, 
-                name: '什锦水饺', 
-                category: '水饺', 
-                desc: '自选口味拼盘 · 可混搭', 
-                price: 10, 
-                badge: '混搭', 
-                image: '',
+            { id: 9, name: '什锦水饺', category: '水饺', desc: '自选口味拼盘 · 可混搭', price: 10, badge: '混搭', image: '',
                 isMix: true,
-                specs: MIX_SIZES
-            },
+                specs: [{ label: '小份 15只', price: 10 }, { label: '中份 23只', price: 15 }, { label: '大份 30只',
+                    price: 20 }] },
+            { id: 10, name: '大馄饨', category: '馄饨', desc: '皮薄馅大 · 12只', price: 12, badge: '', image: '',
+                specs: [{ label: '12只', price: 12 }, { label: '15只', price: 15 }, { label: '20只', price: 20 }] },
+            { id: 11, name: '鸡蛋肉丝炒饭', category: '炒饭', desc: '香喷喷的家常味', price: 12, badge: '人气', image: '',
+            specs: [] },
+            { id: 12, name: '鸡蛋炒饭', category: '炒饭', desc: '经典原味', price: 8, badge: '', image: '', specs: [] },
+            { id: 13, name: '鸡蛋肉丝炒面', category: '炒面', desc: '劲道面条+肉丝', price: 12, badge: '', image: '',
+            specs: [] },
+            { id: 14, name: '葱油拌面', category: '汤面', desc: '葱香四溢', price: 8, badge: '', image: '', specs: [] },
+            { id: 15, name: '凉拌黄瓜', category: '小菜', desc: '清爽开胃', price: 10, badge: '', image: '', specs: [] },
+            { id: 16, name: '荷包蛋', category: '小菜', desc: '煎蛋', price: 2, badge: '', image: '', specs: [] },
             { id: 17, name: '可乐', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
             { id: 18, name: '雪碧', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
             { id: 19, name: '冰红茶', category: '饮料', desc: '冰镇 · 500ml', price: 3, badge: '', image: '', specs: [] },
@@ -392,7 +382,6 @@
         ];
 
         let menuData = [];
-        let nextId = 21;
         let orders = [];
         let orderFilter = 'all';
 
@@ -401,24 +390,36 @@
         let mixSelectedSize = 0;
         let mixCallback = null;
 
-        function loadMenuLocal() {
-            const stored = localStorage.getItem(STORAGE_KEY);
+        // ============================================================
+        // 初始化：加载菜单
+        // ============================================================
+        function initMenu() {
+            // 先从本地缓存加载
+            const stored = localStorage.getItem('laozhang_menu_data_v4');
             if (stored) {
                 try {
                     menuData = JSON.parse(stored);
-                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
-                    return true;
+                    console.log('✅ 从本地缓存加载菜单:', menuData.length + ' 项');
+                    renderMenu();
+                    // 尝试从云端更新
+                    loadMenuFromSupabase();
+                    return;
                 } catch (e) {}
             }
-            return false;
-        }
-
-        function saveMenuLocal() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(menuData));
+            
+            // 没有缓存，直接用默认数据
+            menuData = JSON.parse(JSON.stringify(DEFAULT_MENU));
+            localStorage.setItem('laozhang_menu_data_v4', JSON.stringify(menuData));
+            console.log('✅ 使用默认菜单数据:', menuData.length + ' 项');
+            renderMenu();
+            
+            // 尝试从云端加载
+            loadMenuFromSupabase();
         }
 
         async function loadMenuFromSupabase() {
             try {
+                console.log('📡 正在从Supabase加载菜单...');
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=*&order=id.asc`, {
                     headers: {
                         'apikey': SUPABASE_PUBLISHABLE_KEY,
@@ -427,52 +428,17 @@
                 });
                 if (!response.ok) throw new Error('网络请求失败');
                 const data = await response.json();
+                console.log('📡 Supabase返回数据:', data);
                 if (data && data.length > 0) {
                     menuData = data;
-                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
-                    saveMenuLocal();
+                    localStorage.setItem('laozhang_menu_data_v4', JSON.stringify(menuData));
+                    console.log('✅ 从Supabase加载成功:', menuData.length + ' 项');
                     renderMenu();
-                    return true;
+                } else {
+                    console.log('⚠️ Supabase返回空数据，使用本地缓存');
                 }
-                return false;
             } catch (e) {
-                console.log('Supabase加载失败：', e);
-                return false;
-            }
-        }
-
-        async function syncMenuToSupabase() {
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/menu?select=id`, {
-                    headers: {
-                        'apikey': SUPABASE_PUBLISHABLE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-                    }
-                });
-                const existing = await response.json();
-                for (const item of existing) {
-                    await fetch(`${SUPABASE_URL}/rest/v1/menu?id=eq.${item.id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'apikey': SUPABASE_PUBLISHABLE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-                        }
-                    });
-                }
-                for (const item of menuData) {
-                    await fetch(`${SUPABASE_URL}/rest/v1/menu`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_PUBLISHABLE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(item)
-                    });
-                }
-                console.log('✅ 菜单已同步到Supabase');
-            } catch (e) {
-                console.log('同步失败：', e);
+                console.log('⚠️ Supabase加载失败，使用本地数据:', e);
             }
         }
 
@@ -533,9 +499,6 @@
             }
         }
 
-        // ============================================================
-        // ⭐ 修复：renderOrders 正确显示状态
-        // ============================================================
         function renderOrders() {
             const container = document.getElementById('orderList');
             const all = orders;
@@ -1116,11 +1079,10 @@
                     showToast('✅ 已更新');
                 }
             } else {
-                menuData.push({ id: nextId++, name, category, desc, price, badge, image, specs });
+                menuData.push({ id: Date.now(), name, category, desc, price, badge, image, specs });
                 showToast('✅ 已添加');
             }
-            saveMenuLocal();
-            await syncMenuToSupabase();
+            localStorage.setItem('laozhang_menu_data_v4', JSON.stringify(menuData));
             renderAdminList();
             renderMenu();
             document.getElementById('editId').value = '';
@@ -1137,8 +1099,7 @@
         async function deleteAdminItem(id) {
             if (!confirm('确定删除该菜品吗？')) return;
             menuData = menuData.filter(d => d.id !== id);
-            saveMenuLocal();
-            await syncMenuToSupabase();
+            localStorage.setItem('laozhang_menu_data_v4', JSON.stringify(menuData));
             renderAdminList();
             renderMenu();
             showToast('已删除');
@@ -1277,28 +1238,16 @@
         });
 
         // ============================================================
-        // 初始化
+        // 启动
         // ============================================================
-        loadMenuFromSupabase().then(success => {
-            if (!success) {
-                if (!loadMenuLocal()) {
-                    menuData = JSON.parse(JSON.stringify(DEFAULT_MENU));
-                    nextId = menuData.reduce((max, item) => Math.max(max, item.id), 0) + 1;
-                    saveMenuLocal();
-                    syncMenuToSupabase();
-                }
-                renderMenu();
-            }
-        });
-
+        initMenu();
         fetchOrders();
         setInterval(fetchOrders, 10000);
 
         showToast('🏪 收银台已打开');
-        console.log('🥟 收银台已启动');
-        console.log('✅ 出餐和收款已分离，互不影响');
-        console.log('⚠️ 「已出餐未付款」会显示橙色警告');
+        console.log('🥟 老张家水饺 · 收银台');
         console.log('🔐 管理员密码: 8888');
+        console.log('💡 点击标题5次进入后台管理');
     </script>
 
 </body>
