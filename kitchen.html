@@ -51,8 +51,13 @@
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .stats {
@@ -104,11 +109,17 @@
             animation: slideIn 0.3s ease;
         }
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .order-card.done {
-            opacity: 0.5;
+            opacity: 0.4;
             border-left-color: #27ae60;
             order: 999;
         }
@@ -119,9 +130,18 @@
             animation: flashBg 0.8s ease 2;
         }
         @keyframes flashBg {
-            0% { background: #f1c40f; color: #000; }
-            50% { background: #f1c40f; color: #000; }
-            100% { background: #252525; color: #fdfaf7; }
+            0% {
+                background: #f1c40f;
+                color: #000;
+            }
+            50% {
+                background: #f1c40f;
+                color: #000;
+            }
+            100% {
+                background: #252525;
+                color: #fdfaf7;
+            }
         }
 
         .card-title {
@@ -261,14 +281,33 @@
         }
 
         @media (max-width: 420px) {
-            body { padding: 8px; }
-            .header h1 { font-size: 18px; }
-            .header .time { font-size: 14px; }
-            .stats .stat-item { font-size: 12px; padding: 4px 10px; min-width: 60px; }
-            .stats .stat-item strong { font-size: 15px; }
-            .card-items { font-size: 16px; }
-            .card-footer .price { font-size: 17px; }
-            .card-footer .btn-group button { font-size: 12px; padding: 4px 12px; }
+            body {
+                padding: 8px;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .header .time {
+                font-size: 14px;
+            }
+            .stats .stat-item {
+                font-size: 12px;
+                padding: 4px 10px;
+                min-width: 60px;
+            }
+            .stats .stat-item strong {
+                font-size: 15px;
+            }
+            .card-items {
+                font-size: 16px;
+            }
+            .card-footer .price {
+                font-size: 17px;
+            }
+            .card-footer .btn-group button {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
         }
     </style>
 </head>
@@ -300,7 +339,7 @@
         <div class="empty-state">
             <div class="icon">📭</div>
             <div class="text">暂无订单</div>
-            <div class="sub">等待顾客扫码点单...</div>
+            <div class="sub">等待收银台下单...</div>
         </div>
     </div>
 
@@ -309,7 +348,7 @@
         // Supabase 配置
         // ============================================================
         const SUPABASE_URL = 'https://lmwcvvrrzfilfqectvpl.supabase.co';
-        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_t8ieA51rEM-bdCqS-9pTTA_qi_BepvN';
+        const SUPABASE_KEY = 'sb_publishable_t8ieA51rEM-bdCqS-9pTTA_qi_BepvN';
 
         // ============================================================
         // 状态
@@ -326,7 +365,7 @@
             if (!soundEnabled) return;
             try {
                 if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
                 }
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -395,31 +434,26 @@
         // ============================================================
         async function fetchOrders() {
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&order=create_time.desc`, {
-                    headers: {
-                        'apikey': SUPABASE_PUBLISHABLE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-                    }
+                const res = await fetch(SUPABASE_URL + '/rest/v1/orders?select=*&order=create_time.desc', {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
                 });
-                if (!response.ok) throw new Error('获取订单失败');
-                const newOrders = await response.json();
+                if (!res.ok) throw new Error('获取失败');
+                const newOrders = await res.json();
 
                 if (newOrders.length > lastOrderCount && lastOrderCount > 0) {
                     const newCount = newOrders.length - lastOrderCount;
                     const hint = document.getElementById('newOrderHint');
-                    hint.textContent = `🔔 有 ${newCount} 个新订单！`;
+                    hint.textContent = '🔔 有 ' + newCount + ' 个新订单！';
                     hint.classList.add('show');
                     playBeep();
-                    setTimeout(() => {
-                        hint.classList.remove('show');
-                    }, 4000);
+                    setTimeout(() => hint.classList.remove('show'), 4000);
                 }
 
                 orders = newOrders;
                 lastOrderCount = orders.length;
                 renderOrders();
-            } catch (error) {
-                console.error('获取订单失败：', error);
+            } catch (e) {
+                console.log('获取订单失败:', e);
             }
         }
 
@@ -428,14 +462,13 @@
         // ============================================================
         function renderOrders() {
             const container = document.getElementById('orderContainer');
-            // 待制作：status 不是 "已完成"
             const pending = orders.filter(o => o.status !== '已完成');
             const done = orders.filter(o => o.status === '已完成');
 
             document.getElementById('pendingCount').textContent = pending.length;
             document.getElementById('doneCount').textContent = done.length;
 
-            const totalIncome = done.reduce((sum, o) => sum + (o.total || 0), 0);
+            const totalIncome = done.reduce((s, o) => s + (o.total || 0), 0);
             document.getElementById('todayIncome').textContent = '¥' + totalIncome.toFixed(0);
 
             const badge = document.getElementById('newBadge');
@@ -450,20 +483,18 @@
                     <div class="empty-state">
                         <div class="icon">📭</div>
                         <div class="text">暂无订单</div>
-                        <div class="sub">等待顾客扫码点单...</div>
+                        <div class="sub">等待收银台下单...</div>
                     </div>
                 `;
                 return;
             }
 
             let html = '';
-            // 先显示待制作，再显示已完成
             const sorted = [...pending, ...done];
             sorted.forEach((order, index) => {
                 const isDone = order.status === '已完成';
                 const modeIcon = order.mode === 'pack' ? '📦打包' : '🏠' + (order.table_number || '??') + '号桌';
                 const itemsText = order.items || '菜品';
-
                 const isNew = !isDone && index < 3;
 
                 html += `
@@ -489,26 +520,25 @@
         }
 
         // ============================================================
-        // ⭐ 修复：出餐完成（只改 status，不改 paid）
+        // 出餐完成（只改 status，不改 paid）
         // ============================================================
         async function markDone(orderId) {
             if (!confirm('确认这份订单已出餐？')) return;
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+                await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + orderId, {
                     method: 'PATCH',
                     headers: {
-                        'apikey': SUPABASE_PUBLISHABLE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ status: '已完成' })
                 });
-                if (!response.ok) throw new Error('更新订单失败');
                 playBeep();
                 showToast('✅ 已出餐');
                 fetchOrders();
-            } catch (error) {
-                alert('操作失败：' + error.message);
+            } catch (e) {
+                alert('操作失败：' + e.message);
             }
         }
 
@@ -518,32 +548,23 @@
         async function deleteOrder(orderId) {
             if (!confirm('确定删除此订单吗？（仅用于误操作）')) return;
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+                await fetch(SUPABASE_URL + '/rest/v1/orders?id=eq.' + orderId, {
                     method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_PUBLISHABLE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
                 });
-                if (!response.ok) throw new Error('删除订单失败');
                 showToast('已删除');
                 fetchOrders();
-            } catch (error) {
-                alert('删除失败：' + error.message);
+            } catch (e) {
+                alert('删除失败：' + e.message);
             }
         }
 
         // ============================================================
         // 自动刷新
         // ============================================================
-        setInterval(() => {
-            fetchOrders();
-        }, 5000);
-
+        setInterval(fetchOrders, 5000);
         document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                fetchOrders();
-            }
+            if (!document.hidden) fetchOrders();
         });
 
         // ============================================================
@@ -558,11 +579,11 @@
         updateClock();
 
         // ============================================================
-        // 初始化
+        // 启动
         // ============================================================
         fetchOrders();
         console.log('🍳 后厨看板已启动');
-        console.log('✅ 出餐完成只改状态，不影响收款标记');
+        console.log('✅ 出餐只改状态，不影响收款');
     </script>
 
 </body>
